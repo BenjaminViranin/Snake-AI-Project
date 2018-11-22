@@ -19,7 +19,7 @@ Map_Manager::~Map_Manager()
 void Map_Manager::GenerateMap(int p_witdh, int p_height)
 {
 	m_caseSize = (float)p_witdh / (float)m_map._colunm;
-	m_headerheight = p_height - (m_map._line + 1) * m_caseSize;
+	m_headerheight = static_cast<int>(p_height - (m_map._line + 1) * m_caseSize);
 
 	m_width = p_witdh;
 	m_height = p_height - m_headerheight;
@@ -43,8 +43,8 @@ void Map_Manager::GenerateMap(int p_witdh, int p_height)
 	}
 	for (int i = 0; i <= m_map._colunm; i++)
 	{
-		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(m_caseSize * i, m_headerheight), sf::Color::White));
-		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(m_caseSize * i, m_headerheight + m_map._line * m_caseSize), sf::Color::White));
+		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(m_caseSize * i, static_cast<float>(m_headerheight)), sf::Color::White));
+		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(m_caseSize * i, static_cast<float>(m_headerheight + m_map._line * m_caseSize)), sf::Color::White));
 	}
 
 	/* Generate Map Border */

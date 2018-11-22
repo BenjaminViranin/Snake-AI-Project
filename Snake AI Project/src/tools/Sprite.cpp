@@ -1,8 +1,6 @@
-#include "../../include/tools/Sprite.h"
+#include "include/tools/Sprite.h"
 
-Sprite::Sprite()
-{
-}
+#include <iostream>
 
 Sprite::Sprite(const std::string & p_filename)
 {
@@ -27,13 +25,12 @@ void Sprite::SetPosition(sf::Vector2f position)
 
 void Sprite::SetPosition(int x, int y)
 {
-	this->m_sprite.setPosition(x, y);
+	this->m_sprite.setPosition(static_cast<float>(x), static_cast<float>(y));
 }
 
-sf::Vector2f& Sprite::GetPosition()
+sf::Vector2f Sprite::GetPosition()
 {
-	sf::Vector2f s = m_sprite.getPosition();
-	return s;
+	return m_sprite.getPosition();
 }
 
 sf::Texture& Sprite::GetTexture()

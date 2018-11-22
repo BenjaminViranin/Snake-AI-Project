@@ -29,9 +29,19 @@ void Text_Manager::ResetTextPack()
 
 void Text_Manager::Draw(sf::RenderWindow* p_window)
 {
-	for (int i = 0; i < m_textPack.size(); i++)
+	for (uint16_t i = 0; i < m_textPack.size(); i++)
 	{
 		p_window->draw(m_textPack[i]);
+
+		/*
+		This piece of code show the bounds of the text to print
+
+		sf::FloatRect bounds = m_textPack[i].getGlobalBounds();
+		sf::RectangleShape rectShape(sf::Vector2f(bounds.width, bounds.height));
+		rectShape.setPosition(m_textPack[i].getPosition());
+		p_window->draw(rectShape);
+		*/
 	}
+
 	ResetTextPack();
 }

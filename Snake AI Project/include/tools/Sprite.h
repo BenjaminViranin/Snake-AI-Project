@@ -12,7 +12,6 @@
 #include <string>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
 class Sprite
 {
@@ -21,16 +20,15 @@ private:
 	sf::Texture m_texture;
 
 public:
-	Sprite();
+	Sprite() = default;
 	Sprite(const std::string& p_filename);
-	~Sprite() {};
 
 	void SetSprite(const std::string & p_filename);
 	sf::Sprite& GetSprite();
 	
 	void SetPosition(sf::Vector2f position);
 	void SetPosition(int x, int y);
-	sf::Vector2f& GetPosition();
+	sf::Vector2f GetPosition();
 
 	sf::Texture& GetTexture();
 	void SetRectangle(sf::IntRect rectangle);

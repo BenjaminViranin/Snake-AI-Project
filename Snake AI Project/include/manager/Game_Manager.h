@@ -11,7 +11,7 @@
 #include "Map_Manager.h"
 #include "../entity/Snake.h"
 
-enum GameState
+enum class GameState
 {
 	IsNotSet,
 	IsRunning,
@@ -28,8 +28,8 @@ public:
 private:
 	sf::RenderWindow m_window;
 	bool m_isFullScreen;
-	float m_windowWidth;
-	float m_windowHeight;
+	int m_windowWidth;
+	int m_windowHeight;
 
 	Map_Manager m_map_manager;
 	Snake m_snake;

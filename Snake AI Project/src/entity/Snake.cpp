@@ -13,7 +13,7 @@ Snake::~Snake()
 
 void Snake::Init()
 {
-	m_body.emplace_back(Map_Coordinate(m_map._colunm * 0.5f, m_map._line * 0.5f));
+	m_body.emplace_back(Map_Coordinate(static_cast<int>(m_map._colunm * 0.5f), static_cast<int>(m_map._line * 0.5f)));
 	m_lenght++;
 
 	m_bodyPart.setSize(sf::Vector2f(Map_Manager::m_caseSize, Map_Manager::m_caseSize));
@@ -78,7 +78,7 @@ void Snake::Move()
 			}
 
 			if (!m_isAlive)
-				Game_Manager::GameState = IsGameOver;
+				Game_Manager::GameState = GameState::IsGameOver;
 
 			/* EAT */
 			Eat();
@@ -193,7 +193,7 @@ void Snake::Reset()
 	m_direction = idle;
 
 	m_body.clear();
-	m_body.emplace_back(Map_Coordinate(m_map._colunm * 0.5f, m_map._line * 0.5f));
+	m_body.emplace_back(Map_Coordinate(static_cast<int>(m_map._colunm * 0.5f), static_cast<int>(m_map._line * 0.5f)));
 }
 
 void Snake::Draw(sf::RenderWindow* p_window)

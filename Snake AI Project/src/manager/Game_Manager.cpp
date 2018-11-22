@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../../include/manager/Game_Manager.h"
 
-GameState Game_Manager::GameState = IsNotSet;
+GameState Game_Manager::GameState = GameState::IsNotSet;
 
 Game_Manager::Game_Manager() : m_isFullScreen(false), m_windowWidth(1200), m_windowHeight(675),
 							   m_snake(m_map_manager.GetMap())
@@ -23,16 +23,16 @@ void Game_Manager::Init()
 	{
 		m_windowWidth = sf::VideoMode::getDesktopMode().width;
 		m_windowHeight = sf::VideoMode::getDesktopMode().height;
-		this->m_window.create(sf::VideoMode(m_windowWidth, m_windowHeight), "-- TOWER DEFENCE --", 
+		this->m_window.create(sf::VideoMode(m_windowWidth, m_windowHeight), "-- SNAKE AI --", 
 							  sf::Style::Fullscreen);
 	}
 	else
-		this->m_window.create(sf::VideoMode(m_windowWidth, m_windowHeight), "-- TOWER DEFENCE --");
+		this->m_window.create(sf::VideoMode(m_windowWidth, m_windowHeight), "-- SNAKE AI --");
 
 	m_window.setMouseCursorVisible(true);
 
 	this->m_window.display();
-	GameState = IsRunning;
+	GameState = GameState::IsRunning;
 
 	m_map_manager.GenerateMap(m_windowWidth, m_windowHeight);
 	m_snake.Init();
@@ -41,13 +41,13 @@ void Game_Manager::Init()
 void Game_Manager::Loop()
 {
 	sf::Event event;
-	while (GameState != IsClose)
+	while (GameState != GameState::IsClose)
 	{
 		m_window.pollEvent(event);
 
 		InputEvent(event);
 
-		if (GameState == IsRunning)
+		if (GameState == GameState::IsRunning)
 		{
 			m_snake.InputProcess(event);
 			m_snake.Move();
@@ -65,24 +65,24 @@ void Game_Manager::Loop()
 void Game_Manager::DrawHUD()
 {
 	// Draw Pause, Game Over
-	if (GameState == IsPause)
+	if (GameState == GameState::IsPause)
 	{
-		Text_Manager::Print(34, sf::Color::Yellow, sf::Vector2f(m_windowWidth * 0.5 - 58, m_windowHeight * 0.5 - 17), "PAUSE");
+		Text_Manager::Print(34, sf::Color::Yellow, sf::Vector2f(static_cast<float>(m_windowWidth * 0.5f - 58), static_cast<float>(m_windowHeight * 0.5f - 17)), "PAUSE");
 	}
-	else if (GameState == IsGameOver)
+	else if (GameState == GameState::IsGameOver)
 	{
-		Text_Manager::Print(34, sf::Color::Red, sf::Vector2f(m_windowWidth * 0.5 - 46, m_windowHeight * 0.5 - 17), "DEAD");
+		Text_Manager::Print(34, sf::Color::Red, sf::Vector2f(static_cast<float>(m_windowWidth * 0.5f - 46), static_cast<float>(m_windowHeight * 0.5f - 17)), "DEAD");
 	}
 
 	// Draw FPS
-	Text_Manager::Print(18, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2), "FPS : ", Time::GetFPS());
+	Text_Manager::Print(18, sf::Color::Yellow, sf::Vector2f(static_cast<float>(m_windowWidth - 200), static_cast<float>(2)), "FPS : ", Time::GetFPS());
 
 	// Draw Pause
-	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18),
+	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(static_cast<float>(m_windowWidth - 200), static_cast<float>(2 + 18)),
 						"[P] Pause: ");
-	Text_Manager::Print(16, GameState == IsPause ? sf::Color::Green : sf::Color::Red,
+	Text_Manager::Print(16, GameState == GameState::IsPause ? sf::Color::Green : sf::Color::Red,
 						sf::Vector2f(m_windowWidth - 200 + 90, 2 + 18),
-						GameState == IsPause ? "true" : "false");
+						GameState == GameState::IsPause ? "true" : "false");
 	// Draw Reset Game
 	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18 * 2),
 						"[R][Return] Reset Game");
@@ -118,24 +118,24 @@ void Game_Manager::InputEvent(sf::Event& event)
 		switch (event.key.code)
 		{
 		case sf::Keyboard::P:
-			if (GameState == IsRunning)
+			if (GameState == GameState::IsRunning)
 			{
-				GameState = IsPause;
+				GameState = GameState::IsPause;
 			}
-			else if (GameState == IsPause)
+			else if (GameState == GameState::IsPause)
 			{
-				GameState = IsRunning;
+				GameState = GameState::IsRunning;
 			}
 			break;
 		case sf::Keyboard::R:
 			m_map_manager.ResetMap();
 			m_snake.Reset();
-			GameState = IsRunning;
+			GameState = GameState::IsRunning;
 			break;
 		case sf::Keyboard::Return:
 			m_map_manager.ResetMap();
 			m_snake.Reset();
-			GameState = IsRunning;
+			GameState = GameState::IsRunning;
 			break;
 		}
 	}
