@@ -51,47 +51,96 @@ void Game_Manager::Loop()
 		{
 			m_snake.InputProcess(event);
 			m_snake.Move();
+			m_map_manager.Update();
 		}
 
 		Time::UpdateTime();
 
-		// Draw FPS
-		Text_Manager::Print(18, sf::Color::Red, sf::Vector2f(m_windowWidth - 177, 2), "FPS : ", Time::GetFPS());
-		if (Time::allFPS > 0)
-			Text_Manager::Print(18, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 177, 20), "Average FPS : ", Time::GetAverageFPS());
-		Text_Manager::Print(18, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 177, 38), "Min FPS : ", Time::GetMinFPS());
-		Text_Manager::Print(18, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 177, 56), "Max FPS : ", Time::GetMaxFPS());
+		DrawHUD();
 
 		this->Update();
 	}
 }
 
-void Game_Manager::InputEvent(sf::Event& event)
+void Game_Manager::DrawHUD()
 {
-	switch (GameState)
+	// Draw Pause, Game Over
+	if (GameState == IsPause)
 	{
-	case IsPause:
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-		{
-			GameState = IsRunning;
-		}
-		break;
-	case IsRunning:
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-		{
-			GameState = IsPause;
-		}
-		break;
-	case IsGameOver:
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-		{
-
-			GameState = IsRunning;
-		}
-		break;
+		Text_Manager::Print(34, sf::Color::Yellow, sf::Vector2f(m_windowWidth * 0.5 - 58, m_windowHeight * 0.5 - 17), "PAUSE");
+	}
+	else if (GameState == IsGameOver)
+	{
+		Text_Manager::Print(34, sf::Color::Red, sf::Vector2f(m_windowWidth * 0.5 - 46, m_windowHeight * 0.5 - 17), "DEAD");
 	}
 
+	// Draw FPS
+	Text_Manager::Print(18, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2), "FPS : ", Time::GetFPS());
+
+	// Draw Pause
+	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18),
+						"[P] Pause: ");
+	Text_Manager::Print(16, GameState == IsPause ? sf::Color::Green : sf::Color::Red,
+						sf::Vector2f(m_windowWidth - 200 + 90, 2 + 18),
+						GameState == IsPause ? "true" : "false");
+	// Draw Reset Game
+	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18 * 2),
+						"[R][Return] Reset Game");
+
+	// Draw Quit
+	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18 * 3),
+						"[Escape] Quit Game");
+
+	// Draw Draw Grid
+	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18 * 4),
+						"[G] Draw Grid: ");
+	Text_Manager::Print(16, m_map_manager.IsDrawGrid() ? sf::Color::Green : sf::Color::Red,
+						sf::Vector2f(m_windowWidth - 200 + 120, 2 + 18 * 4),
+						m_map_manager.IsDrawGrid() ? "true" : "false");
+	// Draw Snake Speed
+	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18 * 5), 
+						"[-][+] Snake Speed: ");
+	Text_Manager::Print(16, m_snake.GetSpeed() < 50 ? sf::Color::Red : m_snake.GetSpeed() > 85 ? sf::Color::Red : sf::Color::Green,
+						sf::Vector2f(m_windowWidth - 200 + 160, 2 + 18 * 5),
+						m_snake.GetSpeed());
+
+	// Draw Score
+	Text_Manager::Print(34, sf::Color::Yellow, sf::Vector2f(10, 10),
+						"SCORE: ", m_snake.GetScore());
+}
+
+void Game_Manager::InputEvent(sf::Event& event)
+{
 	ExitGame(event);
+
+	if (event.type == sf::Event::KeyPressed)
+	{
+		switch (event.key.code)
+		{
+		case sf::Keyboard::P:
+			if (GameState == IsRunning)
+			{
+				GameState = IsPause;
+			}
+			else if (GameState == IsPause)
+			{
+				GameState = IsRunning;
+			}
+			break;
+		case sf::Keyboard::R:
+			m_map_manager.ResetMap();
+			m_snake.Reset();
+			GameState = IsRunning;
+			break;
+		case sf::Keyboard::Return:
+			m_map_manager.ResetMap();
+			m_snake.Reset();
+			GameState = IsRunning;
+			break;
+		}
+	}
+
+	m_map_manager.inputProcess(event);
 }
 
 void Game_Manager::ExitGame(sf::Event& event)
@@ -122,4 +171,8 @@ void Game_Manager::Update()
 void Game_Manager::Close()
 {
 	m_map_manager.DestroyMap();
+}
+
+void Game_Manager::Reset()
+{
 }

@@ -44,7 +44,9 @@ public:
 	void Init();
 	void Loop();
 	void Close();
+	void Reset();
 
+	void DrawHUD();
 	void InputEvent(sf::Event& event);
 	void ExitGame(sf::Event& event);
 	void Update();

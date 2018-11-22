@@ -24,6 +24,7 @@ private:
 	bool m_AI_Active;
 	/* move speed have to be between 0 and 100 */
 	float m_moveSpeed;
+	int m_score;
 
 	Map& m_map;
 	Direction m_direction;
@@ -38,10 +39,14 @@ public:
 	void Init();
 	void Move();
 	void InputProcess(sf::Event& event);
+	void Eat();
 	void GrowUp(int p_num);
+	void Reset();
 
 	void Draw(sf::RenderWindow* p_window);
 
+	float& GetSpeed();
+	int& GetScore();
 	bool IsAlive();
 };
 

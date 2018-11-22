@@ -21,12 +21,20 @@ struct Map_Coordinate
 	}
 };
 
+struct Food
+{
+	Map_Coordinate _coord;
+	bool isAlive;
+
+	Food() : isAlive(false) {}
+};
+
 struct Map
 {
 	int _colunm;
 	int _line;
 
-	Map_Coordinate _food;
+	Food _food;
 
 	sf::Vector2f _mapGrid[61][25];
 };
@@ -43,7 +51,9 @@ private:
 
 	Map m_map;
 
-	sf::RectangleShape m_case;
+	bool m_drawGrid;
+	std::vector<sf::Vertex> m_GridLines;
+	sf::RectangleShape m_food;
 	std::vector<sf::RectangleShape> m_mapBorder;
 
 public:
@@ -54,9 +64,12 @@ public:
 	void DestroyMap();
 	void ResetMap();
 	void DrawMap(sf::RenderWindow* p_window);
-	void inputProcess(sf::Event& event, sf::RenderWindow* p_window);
+	void Update();
+	void GenerateFood();
+	void inputProcess(sf::Event& event);
 
 	Map& GetMap();
+	bool IsDrawGrid();
 };
 
 #endif
