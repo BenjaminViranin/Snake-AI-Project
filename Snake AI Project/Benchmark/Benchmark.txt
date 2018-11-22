@@ -1,0 +1,9 @@
+Snake Game Benchmark -create 21/11/2018
+
+FPS:
+	version 21/11/2018:
+		[Zotac]:Average{212} Min{7} Max{231}	
+	
+		
+
+		
