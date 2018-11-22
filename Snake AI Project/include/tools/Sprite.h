@@ -8,7 +8,6 @@
 #define BLUE 0, 0, 255
 #define YELLOW 255, 255, 0
 
-
 #include <string>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>

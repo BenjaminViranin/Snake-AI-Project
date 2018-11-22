@@ -1,9 +1,12 @@
 
-#include "../../include/entity/Snake.h"
-#include "../../include/manager/Game_Manager.h"
+#include "include/entity/Snake.h"
+#include "include/manager/Game_Manager.h"
 
-Snake::Snake(Map& p_map) : m_lenght(0), m_isAlive(true), m_AI_Active(false),
-						   m_moveSpeed(80.0f), m_score(0), m_direction(idle), m_map(p_map)
+Snake::Snake(Map& p_map) :
+	m_lenght(0),			m_isAlive(true),
+	m_AI_Active(false),		m_moveSpeed(80.0f),
+	m_score(0),				m_direction(Direction::Idle),
+	m_map(p_map),			m_timeSinceLastMovement(sf::milliseconds(0))
 {
 }
 
@@ -21,7 +24,7 @@ void Snake::Init()
 	m_bodyPart.setOutlineThickness(1.0f);
 }
 
-sf::Time timerCountMove = sf::milliseconds(0);
+
 void Snake::Move()
 {
 	if (m_isAlive)
@@ -32,83 +35,56 @@ void Snake::Move()
 			std::cout << "m_body[before last]: " << m_body[m_body.size() - 2].x << "; " << m_body[m_body.size() - 2].y << "\n";
 		}*/
 
-		if (Time::clockFromStart.getElapsedTime() - timerCountMove
-			>= sf::milliseconds(500) * (1 - m_moveSpeed * 0.01f) && m_moveSpeed != 0.0f)
+		if (ShouldMove())
 		{
-			Map_Coordinate l_frontPart;
-			l_frontPart = m_body[0];
+			Map_Coordinate snakeHead = GetHead();
 
-			if (m_direction == goUp)
+			auto[xMovement, yMovement] = GetMovementDirection(m_direction);
+
+			Map_Coordinate PreviousSnakeHead = snakeHead;
+			SetHead(snakeHead + Map_Coordinate{ xMovement, yMovement });
+
+			if (GetHead().IsOutsideOfBounds(m_map._colunm, m_map._line))
 			{
-				if (m_body[0].y != 1)
-					m_body[0].y--;
-				else
-					m_isAlive = false;
+				Die();
 			}
-			else if (m_direction == goDown)
+			else
 			{
-				if (m_body[0].y != m_map._line - 1)
-					m_body[0].y++;
-				else
-					m_isAlive = false;
-			}
-			else if (m_direction == goRight)
-			{
-				if (m_body[0].x != m_map._colunm - 1)
-					m_body[0].x++;
-				else
-					m_isAlive = false;
-			}
-			else if (m_direction == goLeft)
-			{
-				if (m_body[0].x != 1)
-					m_body[0].x--;
-				else
-					m_isAlive = false;
+				MoveBody(PreviousSnakeHead);
+				TryToEat();
 			}
 
-			if (m_isAlive)
-			{
-				for (int i = 1; i < m_lenght; ++i)
-				{
-					Map_Coordinate l_tempCoord = m_body[i];
-					m_body[i] = l_frontPart;
-					l_frontPart = l_tempCoord;
-				}
-			}
-
-			if (!m_isAlive)
-				Game_Manager::GameState = GameState::IsGameOver;
-
-			/* EAT */
-			Eat();
-
-			timerCountMove = Time::clockFromStart.getElapsedTime();
+			m_timeSinceLastMovement = Time::clockFromStart.getElapsedTime();
 		}
 	}
+}
+
+bool Snake::ShouldMove()
+{
+	return Time::clockFromStart.getElapsedTime() - m_timeSinceLastMovement >= sf::milliseconds(500) * (1 - m_moveSpeed * 0.01f) && m_moveSpeed != 0.0f;
 }
 
 void Snake::InputProcess(sf::Event& event)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		if (m_direction != goDown)
-			m_direction = goUp;
+		if (m_direction != Direction::GoDown)
+			m_direction = Direction::GoUp;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
-		if (m_direction != goUp)
-			m_direction = goDown;
+		if (m_direction != Direction::GoUp)
+			m_direction = Direction::GoDown;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		if (m_direction != goLeft)
-			m_direction = goRight;
+		if (m_direction != Direction::GoLeft)
+			m_direction = Direction::GoRight;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		if (m_direction != goRight)
-			m_direction = goLeft;
+		if (m_direction != Direction::GoRight)
+			m_direction = Direction::GoLeft;
 	}
 
 	if (event.type == sf::Event::KeyPressed)
@@ -129,15 +105,51 @@ void Snake::InputProcess(sf::Event& event)
 	}
 }
 
+bool Snake::IsOnFood()
+{
+	return m_body[0].x == m_map._food._coord.x && m_body[0].y == m_map._food._coord.y;
+}
+
+void Snake::TryToEat()
+{
+	if (IsOnFood())
+		Eat();
+}
+
 void Snake::Eat()
 {
-	if (m_body[0].x == m_map._food._coord.x 
-		&& m_body[0].y == m_map._food._coord.y)
+	m_map._food.isAlive = false;
+	++m_score;
+	GrowUp(1);
+}
+
+void Snake::MoveBody(const Map_Coordinate& p_previousHeadPosition)
+{
+	for (uint16_t i = m_body.size() - 1; i > 0 && i - 1 > 0; ++i)
+		m_body[i] = m_body[i - 1];
+
+	return;
+
+	for (uint16_t i = m_lenght - 1; i > 0; ++i)
 	{
-		m_map._food.isAlive = false;
-		++m_score;
-		GrowUp(1);
+		if (m_lenght > 1)
+		{
+			if (i == 1)
+				m_body[i] = p_previousHeadPosition;
+			else
+				m_body[i] = m_body[i - 1];
+		}
+		else
+		{
+			m_body[i] = p_previousHeadPosition;
+		}
 	}
+}
+
+void Snake::Die()
+{
+	m_isAlive = false;
+	Game_Manager::GameState = GameState::IsGameOver;
 }
 
 void Snake::GrowUp(int p_num)
@@ -157,22 +169,22 @@ void Snake::GrowUp(int p_num)
 		}
 		else
 		{
-			if (m_direction == goDown)
+			if (m_direction == Direction::GoDown)
 			{
 				if (m_body.back().y > 1)
 					m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().y - 1));
 			}
-			if (m_direction == goUp)
+			if (m_direction == Direction::GoUp)
 			{
 				if (m_body.back().y < m_map._line - 1)
 					m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().y + 1));
 			}
-			if (m_direction == goRight)
+			if (m_direction == Direction::GoRight)
 			{
 				if (m_body.back().x > 1)
 					m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().x - 1));
 			}
-			if (m_direction == goLeft)
+			if (m_direction == Direction::GoLeft)
 			{
 				if (m_body.back().x < m_map._colunm - 1)
 					m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().x + 1));
@@ -190,10 +202,42 @@ void Snake::Reset()
 	m_AI_Active = false;
 	m_moveSpeed = 80.0f;
 	m_score = 0;
-	m_direction = idle;
+	m_direction = Direction::Idle;
 
 	m_body.clear();
 	m_body.emplace_back(Map_Coordinate(static_cast<int>(m_map._colunm * 0.5f), static_cast<int>(m_map._line * 0.5f)));
+}
+
+Map_Coordinate Snake::GetHead()
+{
+	return m_body[0];
+}
+
+void Snake::SetHead(const Map_Coordinate & p_newHeadCoordinate)
+{
+	m_body[0] = p_newHeadCoordinate;
+}
+
+std::pair<int, int> Snake::GetMovementDirection(Direction p_direction)
+{
+	switch (p_direction)
+	{
+	case Direction::GoUp:
+		return std::make_pair(0, -1);
+		break;
+	case Direction::GoDown:
+		return std::make_pair(0, 1);
+		break;
+	case Direction::GoRight:
+		return std::make_pair(1, 0);
+		break;
+	case Direction::GoLeft:
+		return std::make_pair(-1, -0);
+		break;
+	default:
+		return std::make_pair(0, 0);
+		break;
+	}
 }
 
 void Snake::Draw(sf::RenderWindow* p_window)

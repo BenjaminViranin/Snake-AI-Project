@@ -7,13 +7,13 @@
 #include <vector>
 #include "../manager/map_manager.h"
 
-enum Direction
+enum class Direction
 {
-	idle,
-	goUp,
-	goDown,
-	goRight,
-	goLeft
+	Idle,
+	GoUp,
+	GoDown,
+	GoRight,
+	GoLeft
 };
 
 class Snake
@@ -25,6 +25,7 @@ private:
 	/* move speed have to be between 0 and 100 */
 	float m_moveSpeed;
 	int m_score;
+	sf::Time m_timeSinceLastMovement;
 
 	Map& m_map;
 	Direction m_direction;
@@ -38,10 +39,18 @@ public:
 
 	void Init();
 	void Move();
+	bool ShouldMove();
 	void InputProcess(sf::Event& event);
+	bool IsOnFood();
+	void TryToEat();
 	void Eat();
+	void MoveBody(const Map_Coordinate& p_previousHeadPosition);
+	void Die();
 	void GrowUp(int p_num);
 	void Reset();
+	Map_Coordinate GetHead();
+	void SetHead(const Map_Coordinate& p_newHeadCoordinate);
+	std::pair<int, int> GetMovementDirection(Direction p_direction);
 
 	void Draw(sf::RenderWindow* p_window);
 
