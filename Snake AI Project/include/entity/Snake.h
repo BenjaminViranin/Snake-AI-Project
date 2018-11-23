@@ -7,13 +7,22 @@
 #include <vector>
 #include "../manager/map_manager.h"
 
-enum Direction
+enum class PrimitiveDirection
 {
-	idle,
-	goUp,
-	goDown,
-	goRight,
-	goLeft
+	Idle,
+	GoUp,
+	GoDown,
+	GoRight,
+	GoLeft
+};
+
+struct Direction
+{
+	bool _isTreated;
+	PrimitiveDirection _primitive;
+
+	Direction(PrimitiveDirection p_primitive = PrimitiveDirection::Idle) : 
+			  _isTreated(false), _primitive(p_primitive) {}
 };
 
 class Snake
@@ -22,12 +31,13 @@ private:
 	int m_lenght;
 	bool m_isAlive;
 	bool m_AI_Active;
-	/* move speed have to be between 0 and 100 */
 	float m_moveSpeed;
 	int m_score;
 
+	sf::Time m_timeSinceLastMovement;
+
 	Map& m_map;
-	Direction m_direction;
+	std::vector<Direction> m_directions;
 
 	sf::RectangleShape m_bodyPart;
 	std::vector<Map_Coordinate> m_body;
@@ -37,14 +47,23 @@ public:
 	~Snake();
 
 	void Init();
-	void Move();
+	void Update(sf::Event& event);
 	void InputProcess(sf::Event& event);
-	void Eat();
-	void GrowUp(int p_num);
 	void Reset();
-
 	void Draw(sf::RenderWindow* p_window);
 
+	void Move();
+	void MoveBody(const Map_Coordinate& p_previousHeadPosition);
+	bool ShouldMove();
+	void TryToEat();
+	void Eat();
+	bool IsOnFood();
+	void GrowUp(int p_num);
+	void Die();
+
+	sf::Vector2i GetMovementDirection();
+	Map_Coordinate GetHead();
+	void SetHead(const Map_Coordinate& p_newHeadCoordinate);
 	float& GetSpeed();
 	int& GetScore();
 	bool IsAlive();

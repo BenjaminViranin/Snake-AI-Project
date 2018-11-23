@@ -1,10 +1,13 @@
 
-#include "../../include/entity/Snake.h"
-#include "../../include/manager/Game_Manager.h"
+#include "include/entity/Snake.h"
+#include "include/manager/Game_Manager.h"
 
-Snake::Snake(Map& p_map) : m_lenght(0), m_isAlive(true), m_AI_Active(false),
-						   m_moveSpeed(80.0f), m_score(0), m_direction(idle), m_map(p_map)
+Snake::Snake(Map& p_map) :	m_lenght(0),			m_isAlive(true),
+							m_AI_Active(false),		m_moveSpeed(80.0f),
+							m_score(0),				m_timeSinceLastMovement(sf::milliseconds(0)),
+							m_map(p_map)		
 {
+	m_directions.emplace_back(Direction());
 }
 
 Snake::~Snake()
@@ -13,7 +16,7 @@ Snake::~Snake()
 
 void Snake::Init()
 {
-	m_body.emplace_back(Map_Coordinate(m_map._colunm * 0.5f, m_map._line * 0.5f));
+	m_body.emplace_back(Map_Coordinate(static_cast<int>(m_map._column * 0.5f), static_cast<int>(m_map._line * 0.5f)));
 	m_lenght++;
 
 	m_bodyPart.setSize(sf::Vector2f(Map_Manager::m_caseSize, Map_Manager::m_caseSize));
@@ -21,96 +24,84 @@ void Snake::Init()
 	m_bodyPart.setOutlineThickness(1.0f);
 }
 
-sf::Time timerCountMove = sf::milliseconds(0);
+void Snake::Update(sf::Event& event)
+{
+	InputProcess(event);
+	Move();
+}
+
 void Snake::Move()
 {
 	if (m_isAlive)
 	{
-		/*if (m_lenght > 1)
+		if (ShouldMove())
 		{
-			std::cout << "m_body[last]: " << m_body[m_body.size() - 1].x << "; " << m_body[m_body.size() - 1].y << "\n";
-			std::cout << "m_body[before last]: " << m_body[m_body.size() - 2].x << "; " << m_body[m_body.size() - 2].y << "\n";
-		}*/
+			Map_Coordinate snakeHead = GetHead();
 
-		if (Time::clockFromStart.getElapsedTime() - timerCountMove
-			>= sf::milliseconds(500) * (1 - m_moveSpeed * 0.01f) && m_moveSpeed != 0.0f)
-		{
-			Map_Coordinate l_frontPart;
-			l_frontPart = m_body[0];
+			sf::Vector2i movementDirection = GetMovementDirection();
 
-			if (m_direction == goUp)
+			Map_Coordinate previousSnakeHead = snakeHead;
+			SetHead(snakeHead + movementDirection);
+
+			if (GetHead().IsOutsideOfBounds(m_map._column, m_map._line))
 			{
-				if (m_body[0].y != 1)
-					m_body[0].y--;
-				else
-					m_isAlive = false;
+				SetHead(snakeHead);
+				Die();
 			}
-			else if (m_direction == goDown)
+			else
 			{
-				if (m_body[0].y != m_map._line - 1)
-					m_body[0].y++;
-				else
-					m_isAlive = false;
-			}
-			else if (m_direction == goRight)
-			{
-				if (m_body[0].x != m_map._colunm - 1)
-					m_body[0].x++;
-				else
-					m_isAlive = false;
-			}
-			else if (m_direction == goLeft)
-			{
-				if (m_body[0].x != 1)
-					m_body[0].x--;
-				else
-					m_isAlive = false;
+				MoveBody(previousSnakeHead);
+				TryToEat();
 			}
 
-			if (m_isAlive)
-			{
-				for (int i = 1; i < m_lenght; ++i)
-				{
-					Map_Coordinate l_tempCoord = m_body[i];
-					m_body[i] = l_frontPart;
-					l_frontPart = l_tempCoord;
-				}
-			}
-
-			if (!m_isAlive)
-				Game_Manager::GameState = IsGameOver;
-
-			/* EAT */
-			Eat();
-
-			timerCountMove = Time::clockFromStart.getElapsedTime();
+			// Clear direction
+			m_timeSinceLastMovement = Tools::Time::clockFromStart.getElapsedTime();
 		}
 	}
 }
 
+bool Snake::ShouldMove()
+{
+	return Tools::Time::clockFromStart.getElapsedTime() - m_timeSinceLastMovement >= sf::milliseconds(500) * (1 - m_moveSpeed * 0.01f) && m_moveSpeed != 0.0f;
+}
+
 void Snake::InputProcess(sf::Event& event)
 {
+	/* Set PrimitiveDirection */
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		if (m_direction != goDown)
-			m_direction = goUp;
+		if (m_directions.back()._primitive != PrimitiveDirection::GoDown 
+			&& m_directions.back()._primitive != PrimitiveDirection::GoUp)
+		{
+			m_directions.emplace_back(Direction(PrimitiveDirection::GoUp));
+		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
-		if (m_direction != goUp)
-			m_direction = goDown;
+		if (m_directions.back()._primitive != PrimitiveDirection::GoUp
+			&& m_directions.back()._primitive != PrimitiveDirection::GoDown)
+		{
+			m_directions.emplace_back(Direction(PrimitiveDirection::GoDown));
+		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		if (m_direction != goLeft)
-			m_direction = goRight;
+		if (m_directions.back()._primitive != PrimitiveDirection::GoLeft
+			&& m_directions.back()._primitive != PrimitiveDirection::GoRight)
+		{
+			m_directions.emplace_back(Direction(PrimitiveDirection::GoRight));
+		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		if (m_direction != goRight)
-			m_direction = goLeft;
+		if (m_directions.back()._primitive != PrimitiveDirection::GoRight
+			&& m_directions.back()._primitive != PrimitiveDirection::GoLeft)
+		{
+			m_directions.emplace_back(Direction(PrimitiveDirection::GoLeft));
+		}
 	}
 
+	/* Set Move Speed */
 	if (event.type == sf::Event::KeyPressed)
 	{
 		switch (event.key.code)
@@ -129,15 +120,34 @@ void Snake::InputProcess(sf::Event& event)
 	}
 }
 
+bool Snake::IsOnFood()
+{
+	return m_body[0].x == m_map._food._coord.x && m_body[0].y == m_map._food._coord.y;
+}
+
+void Snake::TryToEat()
+{
+	if (IsOnFood())
+		Eat();
+}
+
 void Snake::Eat()
 {
-	if (m_body[0].x == m_map._food._coord.x 
-		&& m_body[0].y == m_map._food._coord.y)
-	{
-		m_map._food.isAlive = false;
-		++m_score;
-		GrowUp(1);
-	}
+	m_map._food.isAlive = false;
+	++m_score;
+	GrowUp(1);
+}
+
+void Snake::MoveBody(const Map_Coordinate& p_previousHeadPosition)
+{
+	for (uint16_t i = static_cast<uint16_t>(m_body.size() - 1); i > 0; --i)
+		m_body[i] = i == 1 ? p_previousHeadPosition : m_body[i - 1];
+}
+
+void Snake::Die()
+{
+	m_isAlive = false;
+	Game_Manager::GameState = GameState::IsGameOver;
 }
 
 void Snake::GrowUp(int p_num)
@@ -151,31 +161,31 @@ void Snake::GrowUp(int p_num)
 			else if (m_body.back().y > m_body[m_body.size() - 2].y)
 				m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().y + 1));
 			else if (m_body.back().x > m_body[m_body.size() - 2].x)
-				m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().x + 1));
+				m_body.emplace_back(Map_Coordinate(m_body.back().x - 1, m_body.back().y));
 			else if (m_body.back().x < m_body[m_body.size() - 2].x)
-				m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().x - 1));
+				m_body.emplace_back(Map_Coordinate(m_body.back().x + 1, m_body.back().y));
 		}
 		else
 		{
-			if (m_direction == goDown)
+			if (m_directions.back()._primitive == PrimitiveDirection::GoDown)
 			{
 				if (m_body.back().y > 1)
 					m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().y - 1));
 			}
-			if (m_direction == goUp)
+			if (m_directions.back()._primitive == PrimitiveDirection::GoUp)
 			{
 				if (m_body.back().y < m_map._line - 1)
 					m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().y + 1));
 			}
-			if (m_direction == goRight)
+			if (m_directions.back()._primitive == PrimitiveDirection::GoRight)
 			{
 				if (m_body.back().x > 1)
-					m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().x - 1));
+					m_body.emplace_back(Map_Coordinate(m_body.back().x - 1, m_body.back().y));
 			}
-			if (m_direction == goLeft)
+			if (m_directions.back()._primitive == PrimitiveDirection::GoLeft)
 			{
-				if (m_body.back().x < m_map._colunm - 1)
-					m_body.emplace_back(Map_Coordinate(m_body.back().x, m_body.back().x + 1));
+				if (m_body.back().x < m_map._column - 1)
+					m_body.emplace_back(Map_Coordinate(m_body.back().x + 1, m_body.back().y));
 			}
 		}
 
@@ -190,16 +200,59 @@ void Snake::Reset()
 	m_AI_Active = false;
 	m_moveSpeed = 80.0f;
 	m_score = 0;
-	m_direction = idle;
+	m_directions.clear();
+	m_directions.emplace_back(Direction());
 
 	m_body.clear();
-	m_body.emplace_back(Map_Coordinate(m_map._colunm * 0.5f, m_map._line * 0.5f));
+	m_body.emplace_back(Map_Coordinate(static_cast<int>(m_map._column * 0.5f), static_cast<int>(m_map._line * 0.5f)));
+}
+
+Map_Coordinate Snake::GetHead()
+{
+	return m_body[0];
+}
+
+void Snake::SetHead(const Map_Coordinate& p_newHeadCoordinate)
+{
+	m_body[0] = p_newHeadCoordinate;
+}
+
+sf::Vector2i Snake::GetMovementDirection()
+{
+	for (uint16_t i = 0; i < m_directions.size(); ++i)
+	{
+		if (!m_directions[i]._isTreated || i == m_directions.size() - 1)
+		switch (m_directions[i]._primitive)
+		{
+		case PrimitiveDirection::GoUp:
+			m_directions[i]._isTreated = true;
+			return sf::Vector2i(0, -1);
+			break;
+		case PrimitiveDirection::GoDown:
+			m_directions[i]._isTreated = true;
+			return sf::Vector2i(0, 1);
+			break;
+		case PrimitiveDirection::GoRight:
+			m_directions[i]._isTreated = true;
+			return sf::Vector2i(1, 0);
+			break;
+		case PrimitiveDirection::GoLeft:
+			m_directions[i]._isTreated = true;
+			return sf::Vector2i(-1, 0);
+			break;
+		default:
+			m_directions[i]._isTreated = true;
+			return sf::Vector2i(0, 0);
+			break;
+		}
+	}
 }
 
 void Snake::Draw(sf::RenderWindow* p_window)
 {
 	for (int i = 0; i < m_lenght; ++i)
 	{
+		m_bodyPart.setFillColor(sf::Color((i * 15) > 255 ? 255 - (i * 15) : (i * 15), (255 - i * 15) < 0 ? (255 - i * 15) * -1 : (255 - i * 15), i * 15 > 255 ? 255 - i * 15 : i * 15));
 		m_bodyPart.setPosition(m_map._mapGrid[m_body[i].x][m_body[i].y]);
 		p_window->draw(m_bodyPart);
 	}

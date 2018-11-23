@@ -4,9 +4,8 @@
 #define __MAP_MANAGER_H__
 
 #include <random>
-#include "../tools/Sprite.h"
 #include "../tools/Time.h"
-#include "../../include/tools/Text_Manager.h"
+#include "../../include/tools/Text.h"
 
 struct Map_Coordinate
 {
@@ -14,10 +13,45 @@ struct Map_Coordinate
 	int y;
 
 	Map_Coordinate(int p_x = 0, int p_y = 0) : x(p_x), y(p_y) {}
-	Map_Coordinate& operator=(Map_Coordinate& p_other){
+
+	Map_Coordinate& operator=(const Map_Coordinate& p_other)
+	{
 		this->x = p_other.x;
 		this->y = p_other.y;
 		return *this;
+	}
+
+	Map_Coordinate operator+(const Map_Coordinate& p_other)
+	{
+		Map_Coordinate result;
+
+		result.x = this->x + p_other.x;
+		result.y = this->y + p_other.y;
+
+		return result;
+	}
+
+	Map_Coordinate operator+(const sf::Vector2i& p_other)
+	{
+		Map_Coordinate result;
+
+		result.x = this->x + p_other.x;
+		result.y = this->y + p_other.y;
+
+		return result;
+	}
+
+	Map_Coordinate& operator+=(const Map_Coordinate& p_other)
+	{
+		this->x += p_other.x;
+		this->y += p_other.y;
+
+		return *this;
+	}
+
+	bool IsOutsideOfBounds(int p_mapWidth, int p_mapHeight)
+	{
+		return (x <= 0 || x >= p_mapWidth || y <= 0 || y >= p_mapHeight);
 	}
 };
 
@@ -31,7 +65,7 @@ struct Food
 
 struct Map
 {
-	int _colunm;
+	int _column;
 	int _line;
 
 	Food _food;

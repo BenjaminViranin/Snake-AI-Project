@@ -1,5 +1,8 @@
-#include "../../include/tools/Time.h"
+
+#include "include/tools/Time.h"
 #include <iostream>
+
+using namespace Tools;
 
 sf::Clock Time::clockFromStart;
 

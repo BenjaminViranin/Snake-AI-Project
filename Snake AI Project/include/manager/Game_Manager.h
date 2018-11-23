@@ -6,12 +6,12 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "../tools/Text_Manager.h"
+#include "../tools/Text.h"
 #include "../tools/Time.h"
 #include "Map_Manager.h"
 #include "../entity/Snake.h"
 
-enum GameState
+enum class GameState
 {
 	IsNotSet,
 	IsRunning,
@@ -28,13 +28,12 @@ public:
 private:
 	sf::RenderWindow m_window;
 	bool m_isFullScreen;
-	float m_windowWidth;
-	float m_windowHeight;
+	int m_windowWidth;
+	int m_windowHeight;
 
+	Tools::Text m_textTools;
 	Map_Manager m_map_manager;
 	Snake m_snake;
-
-	Text_Manager m_text_manager;
 
 public:
 	Game_Manager();
@@ -46,7 +45,7 @@ public:
 	void Close();
 	void Reset();
 
-	void DrawHUD();
+	void UpdateHUD();
 	void InputEvent(sf::Event& event);
 	void ExitGame(sf::Event& event);
 	void Update();

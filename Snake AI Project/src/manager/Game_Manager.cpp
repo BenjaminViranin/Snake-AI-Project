@@ -1,7 +1,8 @@
-#include <iostream>
-#include "../../include/manager/Game_Manager.h"
 
-GameState Game_Manager::GameState = IsNotSet;
+#include <iostream>
+#include "include/manager/Game_Manager.h"
+
+GameState Game_Manager::GameState = GameState::IsNotSet;
 
 Game_Manager::Game_Manager() : m_isFullScreen(false), m_windowWidth(1200), m_windowHeight(675),
 							   m_snake(m_map_manager.GetMap())
@@ -23,16 +24,16 @@ void Game_Manager::Init()
 	{
 		m_windowWidth = sf::VideoMode::getDesktopMode().width;
 		m_windowHeight = sf::VideoMode::getDesktopMode().height;
-		this->m_window.create(sf::VideoMode(m_windowWidth, m_windowHeight), "-- TOWER DEFENCE --", 
+		this->m_window.create(sf::VideoMode(m_windowWidth, m_windowHeight), "-- SNAKE AI --", 
 							  sf::Style::Fullscreen);
 	}
 	else
-		this->m_window.create(sf::VideoMode(m_windowWidth, m_windowHeight), "-- TOWER DEFENCE --");
+		this->m_window.create(sf::VideoMode(m_windowWidth, m_windowHeight), "-- SNAKE AI --");
 
 	m_window.setMouseCursorVisible(true);
 
 	this->m_window.display();
-	GameState = IsRunning;
+	GameState = GameState::IsRunning;
 
 	m_map_manager.GenerateMap(m_windowWidth, m_windowHeight);
 	m_snake.Init();
@@ -41,71 +42,71 @@ void Game_Manager::Init()
 void Game_Manager::Loop()
 {
 	sf::Event event;
-	while (GameState != IsClose)
+	while (GameState != GameState::IsClose)
 	{
 		m_window.pollEvent(event);
 
 		InputEvent(event);
 
-		if (GameState == IsRunning)
+		if (GameState == GameState::IsRunning)
 		{
-			m_snake.InputProcess(event);
-			m_snake.Move();
+			m_snake.Update(event);
 			m_map_manager.Update();
 		}
 
-		Time::UpdateTime();
+		Tools::Time::UpdateTime();
 
-		DrawHUD();
+		UpdateHUD();
 
 		this->Update();
 	}
 }
 
-void Game_Manager::DrawHUD()
+void Game_Manager::UpdateHUD()
 {
 	// Draw Pause, Game Over
-	if (GameState == IsPause)
+	if (GameState == GameState::IsPause)
 	{
-		Text_Manager::Print(34, sf::Color::Yellow, sf::Vector2f(m_windowWidth * 0.5 - 58, m_windowHeight * 0.5 - 17), "PAUSE");
+		Tools::Text::Print(34, sf::Color::Yellow, sf::Vector2f(static_cast<float>(m_windowWidth * 0.5f - 58), static_cast<float>(m_windowHeight * 0.5f - 17)), "PAUSE");
 	}
-	else if (GameState == IsGameOver)
+	else if (GameState == GameState::IsGameOver)
 	{
-		Text_Manager::Print(34, sf::Color::Red, sf::Vector2f(m_windowWidth * 0.5 - 46, m_windowHeight * 0.5 - 17), "DEAD");
+		Tools::Text::Print(34, sf::Color::Red, sf::Vector2f(m_windowWidth * 0.5f - 46, m_windowHeight * 0.5f - 17), "DEAD");
 	}
 
 	// Draw FPS
-	Text_Manager::Print(18, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2), "FPS : ", Time::GetFPS());
+	Tools::Text::Print(18, sf::Color::Yellow, sf::Vector2f(static_cast<float>(m_windowWidth - 200), static_cast<float>(2)), "FPS : ", Tools::Time::GetFPS());
 
 	// Draw Pause
-	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18),
+	Tools::Text::Print(16, sf::Color::Yellow, sf::Vector2f(static_cast<float>(m_windowWidth - 200), static_cast<float>(2 + 18)),
 						"[P] Pause: ");
-	Text_Manager::Print(16, GameState == IsPause ? sf::Color::Green : sf::Color::Red,
-						sf::Vector2f(m_windowWidth - 200 + 90, 2 + 18),
-						GameState == IsPause ? "true" : "false");
+	Tools::Text::Print(16, GameState == GameState::IsPause ? sf::Color::Green : sf::Color::Red,
+						sf::Vector2f(static_cast<float>(m_windowWidth - 200 + 90), static_cast<float>(2 + 18)),
+						GameState == GameState::IsPause ? "true" : "false");
 	// Draw Reset Game
-	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18 * 2),
+	Tools::Text::Print(16, sf::Color::Yellow, sf::Vector2f(static_cast<float>(m_windowWidth - 200), static_cast<float>(2 + 18 * 2)),
 						"[R][Return] Reset Game");
 
 	// Draw Quit
-	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18 * 3),
+	Tools::Text::Print(16, sf::Color::Yellow, sf::Vector2f(static_cast<float>(m_windowWidth - 200), static_cast<float>(2 + 18 * 3)),
 						"[Escape] Quit Game");
 
 	// Draw Draw Grid
-	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18 * 4),
+	Tools::Text::Print(16, sf::Color::Yellow, sf::Vector2f(static_cast<float>(m_windowWidth - 200), static_cast<float>(2 + 18 * 4)),
 						"[G] Draw Grid: ");
-	Text_Manager::Print(16, m_map_manager.IsDrawGrid() ? sf::Color::Green : sf::Color::Red,
-						sf::Vector2f(m_windowWidth - 200 + 120, 2 + 18 * 4),
+	Tools::Text::Print(16, m_map_manager.IsDrawGrid() ? sf::Color::Green : sf::Color::Red,
+						sf::Vector2f(static_cast<float>(m_windowWidth - 200 + 120), static_cast<float>(2 + 18 * 4)),
 						m_map_manager.IsDrawGrid() ? "true" : "false");
+
 	// Draw Snake Speed
-	Text_Manager::Print(16, sf::Color::Yellow, sf::Vector2f(m_windowWidth - 200, 2 + 18 * 5), 
+	Tools::Text::Print(16, sf::Color::Yellow, sf::Vector2f(static_cast<float>(m_windowWidth - 200), static_cast<float>(2 + 18 * 5)),
 						"[-][+] Snake Speed: ");
-	Text_Manager::Print(16, m_snake.GetSpeed() < 50 ? sf::Color::Red : m_snake.GetSpeed() > 85 ? sf::Color::Red : sf::Color::Green,
-						sf::Vector2f(m_windowWidth - 200 + 160, 2 + 18 * 5),
+	Tools::Text::Print(16, m_snake.GetSpeed() < 50 ? sf::Color::Red : m_snake.GetSpeed() > 85 ? sf::Color::Red : sf::Color::Green,
+						sf::Vector2f(static_cast<float>(m_windowWidth - 200 + 160), static_cast<float>(2 + 18 * 5)),
 						m_snake.GetSpeed());
 
 	// Draw Score
-	Text_Manager::Print(34, sf::Color::Yellow, sf::Vector2f(10, 10),
+	Tools::Text::Print(34, sf::Color::Yellow, sf::Vector2f(10, 10),
 						"SCORE: ", m_snake.GetScore());
 }
 
@@ -118,24 +119,24 @@ void Game_Manager::InputEvent(sf::Event& event)
 		switch (event.key.code)
 		{
 		case sf::Keyboard::P:
-			if (GameState == IsRunning)
+			if (GameState == GameState::IsRunning)
 			{
-				GameState = IsPause;
+				GameState = GameState::IsPause;
 			}
-			else if (GameState == IsPause)
+			else if (GameState == GameState::IsPause)
 			{
-				GameState = IsRunning;
+				GameState = GameState::IsRunning;
 			}
 			break;
 		case sf::Keyboard::R:
 			m_map_manager.ResetMap();
 			m_snake.Reset();
-			GameState = IsRunning;
+			GameState = GameState::IsRunning;
 			break;
 		case sf::Keyboard::Return:
 			m_map_manager.ResetMap();
 			m_snake.Reset();
-			GameState = IsRunning;
+			GameState = GameState::IsRunning;
 			break;
 		}
 	}
@@ -163,7 +164,7 @@ void Game_Manager::Update()
 
 	m_map_manager.DrawMap(&m_window);
 	m_snake.Draw(&m_window);
-	Text_Manager::Draw(&m_window);
+	Tools::Text::Draw(&m_window);
 
 	this->m_window.display();
 }

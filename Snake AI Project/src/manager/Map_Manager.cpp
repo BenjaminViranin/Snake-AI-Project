@@ -1,14 +1,14 @@
+
 #include <iostream>
-#include "../../include/manager/map_manager.h"
-#include <complex.h>
-#include "../../include/tools/Random.h"
+#include "include/manager/map_manager.h"
+#include "include/tools/Random.h"
 
 float Map_Manager::m_caseSize = 0.0f;
 
 Map_Manager::Map_Manager() : m_width(0), m_height(0), m_headerheight(0), m_drawGrid(false)
 {
 	/* Substract 1 to start index at 0 */
-	m_map._colunm = 60;
+	m_map._column = 60;
 	m_map._line = 24;
 }
 
@@ -18,15 +18,15 @@ Map_Manager::~Map_Manager()
 
 void Map_Manager::GenerateMap(int p_witdh, int p_height)
 {
-	m_caseSize = (float)p_witdh / (float)m_map._colunm;
-	m_headerheight = p_height - (m_map._line + 1) * m_caseSize;
+	m_caseSize = (float)p_witdh / (float)m_map._column;
+	m_headerheight = static_cast<int>(p_height - (m_map._line + 1) * m_caseSize);
 
 	m_width = p_witdh;
 	m_height = p_height - m_headerheight;
 
-	m_caseSize = (float)m_width / ((float)m_map._colunm + 1);
+	m_caseSize = (float)m_width / ((float)m_map._column + 1);
 
-	for (int x = 0; x <= m_map._colunm; ++x)
+	for (int x = 0; x <= m_map._column; ++x)
 	{
 		for (int y = 0; y <= m_map._line; ++y)
 		{
@@ -39,12 +39,12 @@ void Map_Manager::GenerateMap(int p_witdh, int p_height)
 	for (int i = 0; i <= m_map._line; i++)
 	{
 		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(0, m_headerheight + m_caseSize * i), sf::Color::White));
-		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(m_width, m_headerheight + m_caseSize * i), sf::Color::White));
+		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(static_cast<float>(m_width), static_cast<float>(m_headerheight + m_caseSize * i)), sf::Color::White));
 	}
-	for (int i = 0; i <= m_map._colunm; i++)
+	for (int i = 0; i <= m_map._column; i++)
 	{
-		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(m_caseSize * i, m_headerheight), sf::Color::White));
-		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(m_caseSize * i, m_headerheight + m_map._line * m_caseSize), sf::Color::White));
+		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(m_caseSize * i, static_cast<float>(m_headerheight)), sf::Color::White));
+		m_GridLines.emplace_back(sf::Vertex(sf::Vector2f(m_caseSize * i, static_cast<float>(m_headerheight + m_map._line * m_caseSize)), sf::Color::White));
 	}
 
 	/* Generate Map Border */
@@ -52,19 +52,19 @@ void Map_Manager::GenerateMap(int p_witdh, int p_height)
 	l_mapBorder.setFillColor(sf::Color(127, 127, 127));
 
 	l_mapBorder.setPosition(sf::Vector2f(0, m_headerheight - ((p_height - m_headerheight) - (m_map._line + 1)* m_caseSize)));
-	l_mapBorder.setSize(sf::Vector2f(m_width, m_caseSize + ((p_height - m_headerheight) - (m_map._line + 1)* m_caseSize)));
+	l_mapBorder.setSize(sf::Vector2f(static_cast<float>(m_width), static_cast<float>(m_caseSize + ((p_height - m_headerheight) - (m_map._line + 1)* m_caseSize))));
 	m_mapBorder.push_back(l_mapBorder);
 
-	l_mapBorder.setPosition(sf::Vector2f(0, m_headerheight));
-	l_mapBorder.setSize(sf::Vector2f(m_caseSize, m_height));
+	l_mapBorder.setPosition(sf::Vector2f(static_cast<float>(0), static_cast<float>(m_headerheight)));
+	l_mapBorder.setSize(sf::Vector2f(static_cast<float>(m_caseSize), static_cast<float>(m_height)));
 	m_mapBorder.push_back(l_mapBorder);
 
-	l_mapBorder.setPosition(sf::Vector2f(m_width - m_caseSize, m_headerheight));
-	l_mapBorder.setSize(sf::Vector2f(m_caseSize, m_height));
+	l_mapBorder.setPosition(sf::Vector2f(static_cast<float>(m_width - m_caseSize), static_cast<float>(m_headerheight)));
+	l_mapBorder.setSize(sf::Vector2f(static_cast<float>(m_caseSize), static_cast<float>(m_height)));
 	m_mapBorder.push_back(l_mapBorder);
 
 	l_mapBorder.setPosition(sf::Vector2f(0, p_height - m_caseSize - ((p_height - m_headerheight) - (m_map._line + 1)* m_caseSize)));
-	l_mapBorder.setSize(sf::Vector2f(m_width, m_caseSize + ((p_height - m_headerheight) - (m_map._line + 1)* m_caseSize)));
+	l_mapBorder.setSize(sf::Vector2f(static_cast<float>(m_width), static_cast<float>(m_caseSize + ((p_height - m_headerheight) - (m_map._line + 1)* m_caseSize))));
 	m_mapBorder.push_back(l_mapBorder);
 
 	/* Generate Food */
@@ -115,8 +115,8 @@ void Map_Manager::Update()
 
 void Map_Manager::GenerateFood()
 {
-	m_map._food._coord.x = Random::GenerateInt(1, m_map._colunm - 1);
-	m_map._food._coord.y = Random::GenerateInt(1, m_map._line - 1);
+	m_map._food._coord.x = Tools::Random::GenerateInt(1, m_map._column - 1);
+	m_map._food._coord.y = Tools::Random::GenerateInt(1, m_map._line - 1);
 	m_food.setPosition(m_map._mapGrid[m_map._food._coord.x][m_map._food._coord.y]);
 }
 

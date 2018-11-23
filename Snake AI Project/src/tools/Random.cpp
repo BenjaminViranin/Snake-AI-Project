@@ -1,7 +1,9 @@
 
-#include "../../include/tools/Random.h"
+#include "include/tools/Random.h"
 #include <ctime>
 #include <type_traits>
+
+using namespace Tools;
 
 std::default_random_engine Random::s_generator = std::default_random_engine(static_cast<unsigned int>(time(0)));
 
