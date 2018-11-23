@@ -41,7 +41,7 @@ void Snake::Move()
 
 			auto[xMovement, yMovement] = GetMovementDirection(m_direction);
 
-			Map_Coordinate PreviousSnakeHead = snakeHead;
+			Map_Coordinate previousSnakeHead = snakeHead;
 			SetHead(snakeHead + Map_Coordinate{ xMovement, yMovement });
 
 			if (GetHead().IsOutsideOfBounds(m_map._colunm, m_map._line))
@@ -50,7 +50,7 @@ void Snake::Move()
 			}
 			else
 			{
-				MoveBody(PreviousSnakeHead);
+				MoveBody(previousSnakeHead);
 				TryToEat();
 			}
 
@@ -125,25 +125,8 @@ void Snake::Eat()
 
 void Snake::MoveBody(const Map_Coordinate& p_previousHeadPosition)
 {
-	for (uint16_t i = m_body.size() - 1; i > 0 && i - 1 > 0; ++i)
-		m_body[i] = m_body[i - 1];
-
-	return;
-
-	for (uint16_t i = m_lenght - 1; i > 0; ++i)
-	{
-		if (m_lenght > 1)
-		{
-			if (i == 1)
-				m_body[i] = p_previousHeadPosition;
-			else
-				m_body[i] = m_body[i - 1];
-		}
-		else
-		{
-			m_body[i] = p_previousHeadPosition;
-		}
-	}
+	for (uint16_t i = m_body.size() - 1; i > 0; --i)
+		m_body[i] = i == 1 ? p_previousHeadPosition : m_body[i - 1];
 }
 
 void Snake::Die()
