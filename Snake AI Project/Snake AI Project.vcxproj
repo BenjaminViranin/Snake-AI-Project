@@ -70,20 +70,28 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\b.viranin\Desktop\Project\Snake-AI-Project\Dependencies\SFML\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\b.viranin\Desktop\Project\Snake-AI-Project\Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\b.viranin\Desktop\Project\AnimationProgramming\Data;$(SolutionDir)Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\SFML\include;$(ProjectDir);$(ProjectDir)include\;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)Bin\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Bin-Int\$(Platform)-$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\b.viranin\Desktop\Project\Snake-AI-Project\Dependencies\SFML\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\b.viranin\Desktop\Project\Snake-AI-Project\Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\b.viranin\Desktop\Project\AnimationProgramming\Data;$(SolutionDir)Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\SFML\include;$(ProjectDir);$(ProjectDir)include\;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)Bin\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Bin-Int\$(Platform)-$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\b.viranin\Desktop\Project\Snake-AI-Project\Dependencies\SFML\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\b.viranin\Desktop\Project\Snake-AI-Project\Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\b.viranin\Desktop\Project\AnimationProgramming\Data;$(SolutionDir)Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\SFML\include;$(ProjectDir);$(ProjectDir)include\;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)Bin\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Bin-Int\$(Platform)-$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\b.viranin\Desktop\Project\Snake-AI-Project\Dependencies\SFML\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\b.viranin\Desktop\Project\Snake-AI-Project\Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\b.viranin\Desktop\Project\AnimationProgramming\Data;$(SolutionDir)Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\SFML\include;$(ProjectDir);$(ProjectDir)include\;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)Bin\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Bin-Int\$(Platform)-$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -91,10 +99,22 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-main-d.lib;sfml-system-d.lib;sfml-window-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>del "$(OutDir)*.dll"
+xcopy "$(SolutionDir)Dependencies\SFML\bin\*.dll" "$(OutDir)"
+
+RD /S /Q "$(SolutionDir)Build\"
+
+xcopy "$(OutDir)*.dll" "$(SolutionDir)Build\" /e /y /i /r
+xcopy "$(OutDir)*.exe" "$(SolutionDir)Build\" /e /y /i /r
+xcopy "$(ProjectDir)ressource" "$(SolutionDir)Build\ressource\" /e /y /i /r
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -102,10 +122,22 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-main-d.lib;sfml-system-d.lib;sfml-window-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>del "$(OutDir)*.dll"
+xcopy "$(SolutionDir)Dependencies\SFML\bin\*.dll" "$(OutDir)"
+
+RD /S /Q "$(SolutionDir)Build\"
+
+xcopy "$(OutDir)*.dll" "$(SolutionDir)Build\" /e /y /i /r
+xcopy "$(OutDir)*.exe" "$(SolutionDir)Build\" /e /y /i /r
+xcopy "$(ProjectDir)ressource" "$(SolutionDir)Build\ressource\" /e /y /i /r
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -115,12 +147,24 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-main-d.lib;sfml-system-d.lib;sfml-window-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>del "$(OutDir)*.dll"
+xcopy "$(SolutionDir)Dependencies\SFML\bin\*.dll" "$(OutDir)"
+
+RD /S /Q "$(SolutionDir)Build\"
+
+xcopy "$(OutDir)*.dll" "$(SolutionDir)Build\" /e /y /i /r
+xcopy "$(OutDir)*.exe" "$(SolutionDir)Build\" /e /y /i /r
+xcopy "$(ProjectDir)ressource" "$(SolutionDir)Build\ressource\" /e /y /i /r
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -130,49 +174,44 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-main-d.lib;sfml-system-d.lib;sfml-window-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>del "$(OutDir)*.dll"
+xcopy "$(SolutionDir)Dependencies\SFML\bin\*.dll" "$(OutDir)"
+
+RD /S /Q "$(SolutionDir)Build\"
+
+xcopy "$(OutDir)*.dll" "$(SolutionDir)Build\" /e /y /i /r
+xcopy "$(OutDir)*.exe" "$(SolutionDir)Build\" /e /y /i /r
+xcopy "$(ProjectDir)ressource" "$(SolutionDir)Build\ressource\" /e /y /i /r
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\entity\Snake.h" />
-    <ClInclude Include="include\manager\GameManager.h" />
     <ClInclude Include="include\manager\Game_Manager.h" />
     <ClInclude Include="include\manager\Level_Manager.h" />
-    <ClInclude Include="include\manager\MapManager.h" />
     <ClInclude Include="include\manager\Map_Manager.h" />
     <ClInclude Include="include\tools\Animation_Manager.h" />
     <ClInclude Include="include\tools\Random.h" />
-    <ClInclude Include="include\tools\Sprite.h" />
-    <ClInclude Include="include\tools\Text_Manager.h" />
+    <ClInclude Include="include\tools\Text.h" />
     <ClInclude Include="include\tools\Time.h" />
     <ClInclude Include="include\tools\Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\entity\Snake.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\manager\Game_Manager.cpp" />
     <ClCompile Include="src\manager\Map_Manager.cpp" />
     <ClCompile Include="src\tools\Random.cpp" />
-    <ClCompile Include="src\tools\Sprite.cpp" />
-    <ClCompile Include="src\tools\Text_Manager.cpp" />
+    <ClCompile Include="src\tools\Text.cpp" />
     <ClCompile Include="src\tools\Time.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="openal32.dll" />
-    <None Include="sfml-audio-2.dll" />
-    <None Include="sfml-audio-d-2.dll" />
-    <None Include="sfml-graphics-2.dll" />
-    <None Include="sfml-graphics-d-2.dll" />
-    <None Include="sfml-network-2.dll" />
-    <None Include="sfml-network-d-2.dll" />
-    <None Include="sfml-system-2.dll" />
-    <None Include="sfml-system-d-2.dll" />
-    <None Include="sfml-window-2.dll" />
-    <None Include="sfml-window-d-2.dll" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

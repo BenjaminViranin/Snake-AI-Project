@@ -42,6 +42,8 @@ void Game_Manager::Init()
 void Game_Manager::Loop()
 {
 	sf::Event event;
+	m_snake.StartMovementInputThread();
+
 	while (GameState != GameState::IsClose)
 	{
 		m_window.pollEvent(event);
