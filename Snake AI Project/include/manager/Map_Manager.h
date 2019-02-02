@@ -3,8 +3,6 @@
 #ifndef __MAP_MANAGER_H__
 #define __MAP_MANAGER_H__
 
-#include <random>
-#include "../tools/Time.h"
 #include "../../include/tools/Text.h"
 
 struct Map_Coordinate

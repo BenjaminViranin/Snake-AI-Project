@@ -7,7 +7,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "../tools/Text.h"
-#include "../tools/Time.h"
 #include "Map_Manager.h"
 #include "../entity/Snake.h"
 
@@ -24,7 +23,7 @@ enum class GameState
 class Game_Manager
 {
 public:
-	static GameState GameState;
+	static GameState gameState;
 
 private:
 	sf::RenderWindow m_window;

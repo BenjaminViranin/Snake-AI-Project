@@ -1,7 +1,6 @@
 
-#include <iostream>
-#include "include/manager/map_manager.h"
-#include "include/tools/Random.h"
+#include "manager/Map_Manager.h"
+#include "tools/Random.h"
 
 float Map_Manager::m_caseSize = 0.0f;
 

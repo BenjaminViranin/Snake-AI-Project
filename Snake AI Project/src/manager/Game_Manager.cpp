@@ -1,9 +1,11 @@
 
 #include <iostream>
 #include <fstream>
-#include "include/manager/Game_Manager.h"
 
-GameState Game_Manager::GameState = GameState::IsNotSet;
+#include "include/manager/Game_Manager.h"
+#include "tools/Time.h"
+
+GameState Game_Manager::gameState = GameState::IsNotSet;
 
 Game_Manager::Game_Manager() : m_isFullScreen(false), m_windowWidth(1200), m_windowHeight(675),
 							   m_snake(m_map_manager.GetMap()), m_saveLength(20)
@@ -34,7 +36,7 @@ void Game_Manager::Init()
 	m_window.setMouseCursorVisible(true);
 
 	this->m_window.display();
-	GameState = GameState::IsRunning;
+	gameState = GameState::IsRunning;
 
 	m_map_manager.GenerateMap(m_windowWidth, m_windowHeight);
 	m_snake.Init();
@@ -44,13 +46,13 @@ void Game_Manager::Loop()
 {
 	sf::Event event;
 
-	while (GameState != GameState::IsClose)
+	while (gameState != GameState::IsClose)
 	{
 		m_window.pollEvent(event);
 
 		InputEvent(event);
 
-		if (GameState == GameState::IsRunning)
+		if (gameState == GameState::IsRunning)
 		{
 			m_snake.Update(event);
 			m_map_manager.Update();
@@ -62,7 +64,7 @@ void Game_Manager::Loop()
 	}
 }
 
-void Game_Manager::UpdateHUD()
+void Game_Manager::DrawHUD()
 {
 	sf::Color l_textColor = sf::Color(135, 206, 250);
 	sf::Vector2f l_textPos;
@@ -71,7 +73,7 @@ void Game_Manager::UpdateHUD()
 	// TODO auto bounds detection
 
 	// Draw Pause
-	if (GameState == GameState::IsPause)
+	if (gameState == GameState::IsPause)
 	{
 		l_textPos = sf::Vector2f(m_windowWidth * 0.5f - (Tools::Text::GetTextBounds("PAUSE", 50).width * 0.5f), 
 								 m_windowHeight * 0.5f - (Tools::Text::GetTextBounds("PAUSE", 50).height * 0.5f));
@@ -79,7 +81,7 @@ void Game_Manager::UpdateHUD()
 	}
 
 	// Draw Game Over
-	if (GameState == GameState::IsGameOver)
+	if (gameState == GameState::IsGameOver)
 	{
 		l_textPos = sf::Vector2f(m_windowWidth * 0.5f - (Tools::Text::GetTextBounds("DEAD", 50).width * 0.5f),
 								 m_windowHeight * 0.5f - (Tools::Text::GetTextBounds("DEAD", 50).height * 0.5f));
@@ -100,7 +102,7 @@ void Game_Manager::UpdateHUD()
 	l_textPos = Tools::Text::GetPositionByOtherText("FPS : ", DOWN, l_heightTextOffset);
 	Tools::Text::Print(22, l_textColor, l_textPos, "[P] Pause: ");
 	l_textPos = Tools::Text::GetPositionByOtherText(Tools::Text::GetLastText().getString(), RIGHT, 2);
-	Tools::Text::Print(22, GameState == GameState::IsPause ? sf::Color::Green : sf::Color::Red, l_textPos, GameState == GameState::IsPause ? "true" : "false");
+	Tools::Text::Print(22, gameState == GameState::IsPause ? sf::Color::Green : sf::Color::Red, l_textPos, gameState == GameState::IsPause ? "true" : "false");
 	
 	// Draw Reset Game
 	l_textPos = Tools::Text::GetPositionByOtherText("[P] Pause: ", DOWN, l_heightTextOffset);
@@ -227,13 +229,13 @@ void Game_Manager::InputEvent(sf::Event& event)
 		switch (event.key.code)
 		{
 		case sf::Keyboard::P:
-			if (GameState == GameState::IsRunning)
+			if (gameState == GameState::IsRunning)
 			{
-				GameState = GameState::IsPause;
+				gameState = GameState::IsPause;
 			}
-			else if (GameState == GameState::IsPause)
+			else if (gameState == GameState::IsPause)
 			{
-				GameState = GameState::IsRunning;
+				gameState = GameState::IsRunning;
 			}
 			break;
 		case sf::Keyboard::R:
@@ -243,13 +245,13 @@ void Game_Manager::InputEvent(sf::Event& event)
 			Reset();
 			break;
 		case sf::Keyboard::H:
-			if (GameState == GameState::IsRunning)
+			if (gameState == GameState::IsRunning)
 			{
-				GameState = GameState::IsShowHighScore;
+				gameState = GameState::IsShowHighScore;
 			}
-			else if (GameState == GameState::IsShowHighScore)
+			else if (gameState == GameState::IsShowHighScore)
 			{
-				GameState = GameState::IsRunning;
+				gameState = GameState::IsRunning;
 			}
 			break;
 		}
@@ -276,7 +278,7 @@ void Game_Manager::Update()
 {
 	this->m_window.clear();
 
-	if (GameState == GameState::IsShowHighScore)
+	if (gameState == GameState::IsShowHighScore)
 		ShowHighScores();
 	else
 	{
@@ -299,5 +301,5 @@ void Game_Manager::Reset()
 	SaveScore();
 	m_map_manager.ResetMap();
 	m_snake.Reset();
-	GameState = GameState::IsRunning;
+	gameState = GameState::IsRunning;
 }
