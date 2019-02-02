@@ -6,8 +6,9 @@
 #include <SFML/System/Vector2.hpp>
 #include <vector>
 #include "../manager/map_manager.h"
+#include <mutex>
 
-enum class Direction
+enum class PrimitiveDirection
 {
 	Idle,
 	GoUp,
@@ -16,47 +17,83 @@ enum class Direction
 	GoLeft
 };
 
+struct Direction
+{
+	bool				_isTreated;
+	PrimitiveDirection	_primitive;
+
+	Direction(PrimitiveDirection p_primitive = PrimitiveDirection::Idle) : 
+			  _isTreated(false), _primitive(p_primitive) {}
+};
+
+struct HeadShape
+{
+	sf::CircleShape _leftEye;
+	sf::CircleShape _rightEye;
+	sf::ConvexShape _skull;
+};
+
 class Snake
 {
 private:
-	int m_lenght;
-	bool m_isAlive;
-	bool m_AI_Active;
-	/* move speed have to be between 0 and 100 */
-	float m_moveSpeed;
-	int m_score;
-	sf::Time m_timeSinceLastMovement;
+	int		m_lenght;
+	bool	m_isAlive;
+	bool	m_AI_Active;
+	float	m_moveSpeed;
+	int		m_score;
 
-	Map& m_map;
-	Direction m_direction;
+	/* Map, Direction */
+	Map&							m_map;
+	sf::Time						m_timeSinceLastMovement;
+	sf::Vector2i					m_movementDirection;
+	std::pair<Direction, Direction> m_direction;
+	PrimitiveDirection				m_oldFirst;
 
-	sf::RectangleShape m_bodyPart;
+	/* Body, Color */
+	sf::RectangleShape			m_bodyPart;
+	HeadShape					m_head;
+	sf::ConvexShape				m_tail;
 	std::vector<Map_Coordinate> m_body;
+	sf::Color					m_bodyColor;
 
 public:
 	Snake(Map& p_map);
 	~Snake();
 
 	void Init();
-	void Move();
-	bool ShouldMove();
+	void InitHeadShape();
+	void InitTailShape();
+	void Update(sf::Event& event);
+	void Reset();
+	void Draw(sf::RenderWindow* p_window);
+	void DrawHead(sf::RenderWindow* p_window);
+	void DrawTail(sf::RenderWindow* p_window);
+	void SetBodyColor(int p_index, std::string p_mode, float p_frequency);
+
 	void InputProcess(sf::Event& event);
-	bool IsOnFood();
+	void ProcessUpInput();
+	void ProcessDownInput();
+	void ProcessRightInput();
+	void ProcessLeftInput();
+
+	void Move();
+	void MoveBody(const Map_Coordinate& p_previousHeadPosition);
+	bool ShouldMove();
+	bool CheckCollision(const Map_Coordinate& p_head);
+	void UpdateMapGridCase(const Map_Coordinate& p_previousTailPos);
 	void TryToEat();
 	void Eat();
-	void MoveBody(const Map_Coordinate& p_previousHeadPosition);
-	void Die();
+	bool IsOnFood();
 	void GrowUp(int p_num);
-	void Reset();
-	Map_Coordinate GetHead();
-	void SetHead(const Map_Coordinate& p_newHeadCoordinate);
-	std::pair<int, int> GetMovementDirection(Direction p_direction);
+	void Die();
 
-	void Draw(sf::RenderWindow* p_window);
-
-	float& GetSpeed();
-	int& GetScore();
-	bool IsAlive();
+	sf::Vector2i	GetMovementDirection();
+	Map_Coordinate	GetHead();
+	Map_Coordinate	GetTail();
+	void			SetHead(const Map_Coordinate& p_newHeadCoordinate);
+	float&			GetSpeed();
+	int&			GetScore();
+	bool			IsAlive();
 };
 
 #endif

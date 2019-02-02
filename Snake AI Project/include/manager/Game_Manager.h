@@ -6,7 +6,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "../tools/Text_Manager.h"
+#include "../tools/Text.h"
 #include "../tools/Time.h"
 #include "Map_Manager.h"
 #include "../entity/Snake.h"
@@ -17,7 +17,8 @@ enum class GameState
 	IsRunning,
 	IsClose,
 	IsGameOver,
-	IsPause
+	IsPause,
+	IsShowHighScore
 };
 
 class Game_Manager
@@ -31,10 +32,12 @@ private:
 	int m_windowWidth;
 	int m_windowHeight;
 
+	/* Saves */
+	int m_saveLength;
+
+	Tools::Text m_textTools;
 	Map_Manager m_map_manager;
 	Snake m_snake;
-
-	Text_Manager m_text_manager;
 
 public:
 	Game_Manager();
@@ -43,13 +46,18 @@ public:
 	int Run();
 	void Init();
 	void Loop();
+	void Update();
 	void Close();
 	void Reset();
 
 	void DrawHUD();
+	void ShowHighScores();
+
+	void SaveScore();
+	void LoadScore(std::vector<std::pair<std::string, int>>& p_saveData);
+
 	void InputEvent(sf::Event& event);
 	void ExitGame(sf::Event& event);
-	void Update();
 };
 
 #endif

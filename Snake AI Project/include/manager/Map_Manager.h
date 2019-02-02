@@ -4,9 +4,8 @@
 #define __MAP_MANAGER_H__
 
 #include <random>
-#include "../tools/Sprite.h"
 #include "../tools/Time.h"
-#include "../../include/tools/Text_Manager.h"
+#include "../../include/tools/Text.h"
 
 struct Map_Coordinate
 {
@@ -32,6 +31,16 @@ struct Map_Coordinate
 		return result;
 	}
 
+	Map_Coordinate operator+(const sf::Vector2i& p_other)
+	{
+		Map_Coordinate result;
+
+		result.x = this->x + p_other.x;
+		result.y = this->y + p_other.y;
+
+		return result;
+	}
+
 	Map_Coordinate& operator+=(const Map_Coordinate& p_other)
 	{
 		this->x += p_other.x;
@@ -46,22 +55,34 @@ struct Map_Coordinate
 	}
 };
 
-struct Food
+struct Apple
 {
 	Map_Coordinate _coord;
 	bool isAlive;
 
-	Food() : isAlive(false) {}
+	Apple() : isAlive(false) {}
+};
+
+struct AppleShape
+{
+	sf::ConvexShape _leaf;
+	sf::ConvexShape _body;
+};
+
+struct MapCase
+{
+	bool			_isFree;
+	sf::Vector2f	 _pos;
 };
 
 struct Map
 {
-	int _colunm;
+	int _column;
 	int _line;
 
-	Food _food;
+	Apple _Apple;
 
-	sf::Vector2f _mapGrid[61][25];
+	MapCase _mapGrid[61][25];
 };
 
 class Map_Manager
@@ -75,10 +96,11 @@ private:
 	int m_headerheight;
 
 	Map m_map;
+	bool* m_mapCases[60 * 24];
 
 	bool m_drawGrid;
 	std::vector<sf::Vertex> m_GridLines;
-	sf::RectangleShape m_food;
+	AppleShape m_apple;
 	std::vector<sf::RectangleShape> m_mapBorder;
 
 public:
@@ -86,11 +108,13 @@ public:
 	~Map_Manager();
 
 	void GenerateMap(int p_witdh, int p_height);
-	void DestroyMap();
+	void InitAppleShape();
+	void ClearMap();
 	void ResetMap();
 	void DrawMap(sf::RenderWindow* p_window);
+	void DrawAppleShape(sf::RenderWindow* p_window);
 	void Update();
-	void GenerateFood();
+	void GenerateApple();
 	void inputProcess(sf::Event& event);
 
 	Map& GetMap();
