@@ -12,6 +12,10 @@ Snake::Snake(Map& p_map) :	m_lenght(0),									m_isAlive(true),
 
 Snake::~Snake()
 {
+	m_upThread.join();
+	m_downThread.join();
+	m_rightThread.join();
+	m_leftThread.join();
 }
 
 void Snake::Init()
@@ -235,6 +239,7 @@ void Snake::MoveBody(const Map_Coordinate& p_previousHeadPosition)
 void Snake::Die()
 {
 	m_isAlive = false;
+	m_takeMovementInput = false;
 	Game_Manager::GameState = GameState::IsGameOver;
 }
 

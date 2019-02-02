@@ -62,7 +62,7 @@ void Game_Manager::Loop()
 	}
 }
 
-void Game_Manager::DrawHUD()
+void Game_Manager::UpdateHUD()
 {
 	sf::Color l_textColor = sf::Color(135, 206, 250);
 	sf::Vector2f l_textPos;
