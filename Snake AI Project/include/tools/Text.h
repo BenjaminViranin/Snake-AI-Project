@@ -11,18 +11,30 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-#define UP "up"
-#define DOWN "down"
-#define LEFT "left"
-#define RIGHT "right"
-
 namespace Tools
 {
-	class Text
+	enum class ETextPosition
+	{
+		Up,
+		Down,
+		Left,
+		Right
+	};
+
+	enum class ETextEncrage
+	{
+		UpLeft,
+		UpRight,
+		DownLeft,
+		DownRight,
+		Middle
+	};
+
+	class SfLogger
 	{
 	public:
-		Text();
-		~Text();
+		SfLogger();
+		~SfLogger();
 
 		static std::vector<sf::Text>& Get_textPack();
 
@@ -104,7 +116,7 @@ namespace Tools
 		static sf::FloatRect GetLastTextBounds();
 		static sf::FloatRect GetTextBounds(std::string p_text);
 		static sf::FloatRect GetTextBounds(std::string p_text, float p_size);
-		static sf::Vector2f GetPositionByOtherText(std::string p_otherText, std::string p_pos, float p_offset, float p_secondOffset = 0.0f);
+		static sf::Vector2f GetPositionByOtherText(std::string p_otherText, ETextPosition p_pos, float p_offset, float p_secondOffset = 0.0f);
 
 		/* Draw and clear */
 		static void Draw(sf::RenderWindow* p_window);

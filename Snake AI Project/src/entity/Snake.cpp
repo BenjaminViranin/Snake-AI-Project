@@ -236,7 +236,7 @@ void Snake::MoveBody(const Map_Coordinate& p_previousHeadPosition)
 void Snake::Die()
 {
 	m_isAlive = false;
-	Game_Manager::gameState = GameState::IsGameOver;
+	Game_Manager::EGameState = EGameState::IsGameOver;
 }
 
 void Snake::GrowUp(int p_num)

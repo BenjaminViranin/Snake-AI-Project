@@ -2378,12 +2378,6 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1Ftp.html#a2edfa8e9009caf27bce74459ae76dc52"><param name="Name" value="~Ftp"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1GlResource.html"><param name="Name" value="sf::GlResource"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html"><param name="Name" value="sf::GlResource::TransientContextLock"></OBJECT>
-  <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html#a6434ee8f0380c300b361be038f37123a"><param name="Name" value="TransientContextLock"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html#a169285281b252ac8d54523b0fcc4b814"><param name="Name" value="~TransientContextLock"></OBJECT>
-  </UL>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1GlResource.html"><param name="Name" value="sf::GlResource"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1GlResource.html#ae0efa7935241644608ca32ba47b22a33"><param name="Name" value="ensureGlContext"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1GlResource.html#ad8fb7a0674f0f77e530dacc2a3b0dc6a"><param name="Name" value="GlResource"></OBJECT>
@@ -3828,7 +3822,6 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1Transformable.html#ae71710de0fef423121bab1c684954a2e"><param name="Name" value="Transformable"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1Transform.html#af20913c6a27087c26192c116397ab40a"><param name="Name" value="transformPoint"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1Transform.html#a345112559981d988e92b54b7976fca8a"><param name="Name" value="transformRect"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html#a6434ee8f0380c300b361be038f37123a"><param name="Name" value="TransientContextLock"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1Transform.html#ab54f6c8070cc05e2afcb3145fbf4395a"><param name="Name" value="translate"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1Color.html#a569b45471737f770656f50ae7bbac292"><param name="Name" value="Transparent"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="group__graphics.html#gga5ee56ac1339984909610713096283b1ba363f7762b33706c805c6a451ad554f5e"><param name="Name" value="TriangleFan"></OBJECT>
@@ -4027,7 +4020,6 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1Thread.html#af77942fc1730af7c31bc4c3a913a9c1d"><param name="Name" value="~Thread"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1ThreadLocal.html#acc612bddfd0f0507b1c5da8b3b8c75c2"><param name="Name" value="~ThreadLocal"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1Transformable.html#a43253abcb863195a673c2a347a7425cc"><param name="Name" value="~Transformable"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html#a169285281b252ac8d54523b0fcc4b814"><param name="Name" value="~TransientContextLock"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classsf_1_1Window.html#ac30eb6ea5f5594204944d09d4bd69a97"><param name="Name" value="~Window"></OBJECT>
 </UL>
 </BODY>

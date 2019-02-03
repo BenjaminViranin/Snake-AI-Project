@@ -12,7 +12,7 @@
     <body>
         <div id="banner-container">
             <div id="banner">
-                <span id="sfml">SFML 2.4.2</span>
+                <span id="sfml">SFML 2.4.0</span>
             </div>
         </div>
         <div id="content">
@@ -1624,7 +1624,7 @@ Protected Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Grab or release the mouse cursor. </p>
-<p>If set, grabs the mouse cursor inside this window's client area so it may no longer be moved outside its bounds. Note that grabbing is only active while the window has focus.</p>
+<p>If set, grabs the mouse cursor inside this window's client area so it may no longer be moved outside its bounds. Note that grabbing is only active while the window has focus and calling this function for fullscreen windows won't have any effect (fullscreen windows always grab the cursor).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">grabbed</td><td>True to enable, false to disable </td></tr>

@@ -174,8 +174,6 @@ classsf_1_1Ftp_1_1Response.html
 classsf_1_1Ftp_1_1Response-members.html
 classsf_1_1GlResource.html
 classsf_1_1GlResource-members.html
-classsf_1_1GlResource_1_1TransientContextLock.html
-classsf_1_1GlResource_1_1TransientContextLock-members.html
 classsf_1_1Glyph.html
 classsf_1_1Glyph-members.html
 classsf_1_1Http.html
@@ -446,7 +444,6 @@ classsf_1_1Ftp_1_1DirectoryResponse.png
 classsf_1_1Ftp_1_1ListingResponse.png
 classsf_1_1Ftp_1_1Response.png
 classsf_1_1GlResource.png
-classsf_1_1GlResource_1_1TransientContextLock.png
 classsf_1_1Http.png
 classsf_1_1InputSoundFile.png
 classsf_1_1InputStream.png

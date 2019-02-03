@@ -5,7 +5,7 @@
 #include "include/manager/Game_Manager.h"
 #include "tools/Time.h"
 
-GameState Game_Manager::gameState = GameState::IsNotSet;
+EGameState Game_Manager::EGameState = EGameState::IsNotSet;
 
 Game_Manager::Game_Manager() : m_isFullScreen(false), m_windowWidth(1200), m_windowHeight(675),
 							   m_snake(m_map_manager.GetMap()), m_saveLength(20)
@@ -36,7 +36,7 @@ void Game_Manager::Init()
 	m_window.setMouseCursorVisible(true);
 
 	this->m_window.display();
-	gameState = GameState::IsRunning;
+	EGameState = EGameState::IsRunning;
 
 	m_map_manager.GenerateMap(m_windowWidth, m_windowHeight);
 	m_snake.Init();
@@ -46,13 +46,13 @@ void Game_Manager::Loop()
 {
 	sf::Event event;
 
-	while (gameState != GameState::IsClose)
+	while (EGameState != EGameState::IsClose)
 	{
 		m_window.pollEvent(event);
 
 		InputEvent(event);
 
-		if (gameState == GameState::IsRunning)
+		if (EGameState == EGameState::IsRunning)
 		{
 			m_snake.Update(event);
 			m_map_manager.Update();
@@ -73,60 +73,60 @@ void Game_Manager::DrawHUD()
 	// TODO auto bounds detection
 
 	// Draw Pause
-	if (gameState == GameState::IsPause)
+	if (EGameState == EGameState::IsPause)
 	{
-		l_textPos = sf::Vector2f(m_windowWidth * 0.5f - (Tools::Text::GetTextBounds("PAUSE", 50).width * 0.5f), 
-								 m_windowHeight * 0.5f - (Tools::Text::GetTextBounds("PAUSE", 50).height * 0.5f));
-		Tools::Text::Print(50, l_textColor, l_textPos, "PAUSE");
+		l_textPos = sf::Vector2f(m_windowWidth * 0.5f - (Tools::SfLogger::GetTextBounds("PAUSE", 50).width * 0.5f), 
+								 m_windowHeight * 0.5f - (Tools::SfLogger::GetTextBounds("PAUSE", 50).height * 0.5f));
+		Tools::SfLogger::Print(50, l_textColor, l_textPos, "PAUSE");
 	}
 
 	// Draw Game Over
-	if (gameState == GameState::IsGameOver)
+	if (EGameState == EGameState::IsGameOver)
 	{
-		l_textPos = sf::Vector2f(m_windowWidth * 0.5f - (Tools::Text::GetTextBounds("DEAD", 50).width * 0.5f),
-								 m_windowHeight * 0.5f - (Tools::Text::GetTextBounds("DEAD", 50).height * 0.5f));
-		Tools::Text::Print(50, sf::Color::Red, l_textPos, "DEAD");
+		l_textPos = sf::Vector2f(m_windowWidth * 0.5f - (Tools::SfLogger::GetTextBounds("DEAD", 50).width * 0.5f),
+								 m_windowHeight * 0.5f - (Tools::SfLogger::GetTextBounds("DEAD", 50).height * 0.5f));
+		Tools::SfLogger::Print(50, sf::Color::Red, l_textPos, "DEAD");
 	}
 
 	// Draw Score
 	l_textPos = sf::Vector2f(10, 10);
-	Tools::Text::Print(50, l_textColor, l_textPos, "SCORE: ", m_snake.GetScore());
+	Tools::SfLogger::Print(50, l_textColor, l_textPos, "SCORE: ", m_snake.GetScore());
 
 	// Draw FPS
 	l_textPos = sf::Vector2f(static_cast<float>(m_windowWidth - 450), static_cast<float>(10));
-	Tools::Text::Print(22, l_textColor, l_textPos, "FPS : ");
-	l_textPos = Tools::Text::GetPositionByOtherText(Tools::Text::GetLastText().getString(), RIGHT, 2);
-	Tools::Text::Print(22, sf::Color(253, 106, 2), l_textPos, Tools::Time::GetFPS());
+	Tools::SfLogger::Print(22, l_textColor, l_textPos, "FPS : ");
+	l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Right, 2);
+	Tools::SfLogger::Print(22, sf::Color(253, 106, 2), l_textPos, Tools::Time::GetFPS());
 
 	// Draw Pause
-	l_textPos = Tools::Text::GetPositionByOtherText("FPS : ", DOWN, l_heightTextOffset);
-	Tools::Text::Print(22, l_textColor, l_textPos, "[P] Pause: ");
-	l_textPos = Tools::Text::GetPositionByOtherText(Tools::Text::GetLastText().getString(), RIGHT, 2);
-	Tools::Text::Print(22, gameState == GameState::IsPause ? sf::Color::Green : sf::Color::Red, l_textPos, gameState == GameState::IsPause ? "true" : "false");
+	l_textPos = Tools::SfLogger::GetPositionByOtherText("FPS : ", Tools::ETextPosition::Down, l_heightTextOffset);
+	Tools::SfLogger::Print(22, l_textColor, l_textPos, "[P] Pause: ");
+	l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Right, 2);
+	Tools::SfLogger::Print(22, EGameState == EGameState::IsPause ? sf::Color::Green : sf::Color::Red, l_textPos, EGameState == EGameState::IsPause ? "true" : "false");
 	
 	// Draw Reset Game
-	l_textPos = Tools::Text::GetPositionByOtherText("[P] Pause: ", DOWN, l_heightTextOffset);
-	Tools::Text::Print(22, l_textColor, l_textPos, "[R][Return] Reset Game");
+	l_textPos = Tools::SfLogger::GetPositionByOtherText("[P] Pause: ", Tools::ETextPosition::Down, l_heightTextOffset);
+	Tools::SfLogger::Print(22, l_textColor, l_textPos, "[R][Return] Reset Game");
 
 	// Draw Quit
-	l_textPos = Tools::Text::GetPositionByOtherText(Tools::Text::GetLastText().getString(), DOWN, l_heightTextOffset);
-	Tools::Text::Print(22, l_textColor, l_textPos, "[Escape] Quit Game");
+	l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Down, l_heightTextOffset);
+	Tools::SfLogger::Print(22, l_textColor, l_textPos, "[Escape] Quit Game");
 
 	// Draw Draw Grid
-	l_textPos = Tools::Text::GetPositionByOtherText("FPS : ", RIGHT, 200);
-	Tools::Text::Print(22, l_textColor, l_textPos,"[G] Draw Grid: ");
-	l_textPos = Tools::Text::GetPositionByOtherText(Tools::Text::GetLastText().getString(), RIGHT, 2);
-	Tools::Text::Print(22, m_map_manager.IsDrawGrid() ? sf::Color::Green : sf::Color::Red, l_textPos, m_map_manager.IsDrawGrid() ? "true" : "false");
+	l_textPos = Tools::SfLogger::GetPositionByOtherText("FPS : ", Tools::ETextPosition::Right, 200);
+	Tools::SfLogger::Print(22, l_textColor, l_textPos,"[G] Draw Grid: ");
+	l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Right, 2);
+	Tools::SfLogger::Print(22, m_map_manager.IsDrawGrid() ? sf::Color::Green : sf::Color::Red, l_textPos, m_map_manager.IsDrawGrid() ? "true" : "false");
 
 	// Draw Snake Speed
-	l_textPos = Tools::Text::GetPositionByOtherText("[G] Draw Grid: ", DOWN, l_heightTextOffset);
-	Tools::Text::Print(22, l_textColor, l_textPos, "[-][+] Snake Speed: ");
-	l_textPos = Tools::Text::GetPositionByOtherText(Tools::Text::GetLastText().getString(), RIGHT, 2);
-	Tools::Text::Print(22, m_snake.GetSpeed() < 50 ? sf::Color::Red : m_snake.GetSpeed() > 85 ? sf::Color::Red : sf::Color::Green, l_textPos, m_snake.GetSpeed());
+	l_textPos = Tools::SfLogger::GetPositionByOtherText("[G] Draw Grid: ", Tools::ETextPosition::Down, l_heightTextOffset);
+	Tools::SfLogger::Print(22, l_textColor, l_textPos, "[-][+] Snake Speed: ");
+	l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Right, 2);
+	Tools::SfLogger::Print(22, m_snake.GetSpeed() < 50 ? sf::Color::Red : m_snake.GetSpeed() > 85 ? sf::Color::Red : sf::Color::Green, l_textPos, m_snake.GetSpeed());
 
 	// Draw Show High Scores
-	l_textPos = Tools::Text::GetPositionByOtherText("[-][+] Snake Speed: ", DOWN, l_heightTextOffset);
-	Tools::Text::Print(22, l_textColor, l_textPos, "[H] Show High Scores");
+	l_textPos = Tools::SfLogger::GetPositionByOtherText("[-][+] Snake Speed: ", Tools::ETextPosition::Down, l_heightTextOffset);
+	Tools::SfLogger::Print(22, l_textColor, l_textPos, "[H] Show High Scores");
 }
 
 void Game_Manager::ShowHighScores()
@@ -141,16 +141,16 @@ void Game_Manager::ShowHighScores()
 	for (int i = 0; i < l_saveData.size(); ++i)
 	{
 		if (i == 0)
-			l_textPos = sf::Vector2f(m_windowWidth * 0.5f - (Tools::Text::GetTextBounds("[H] EXIT", 22).width * 0.5f),
-									 m_windowHeight * 0.5f - (Tools::Text::GetTextBounds("[H] EXIT", 22).height * 0.5f));
+			l_textPos = sf::Vector2f(m_windowWidth * 0.5f - (Tools::SfLogger::GetTextBounds("[H] EXIT", 22).width * 0.5f),
+									 m_windowHeight * 0.5f - (Tools::SfLogger::GetTextBounds("[H] EXIT", 22).height * 0.5f));
 		else
-			l_textPos = Tools::Text::GetPositionByOtherText(Tools::Text::GetLastText().getString(), DOWN, 4);
+			l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Down, 4);
 
-		Tools::Text::Print(22, l_textColor, l_textPos, l_saveData[i].first, std::to_string(l_saveData[i].second));
+		Tools::SfLogger::Print(22, l_textColor, l_textPos, l_saveData[i].first, std::to_string(l_saveData[i].second));
 	}
 
-	l_textPos = Tools::Text::GetPositionByOtherText(Tools::Text::GetLastText().getString(), DOWN, 8);
-	Tools::Text::Print(22, l_textColor, l_textPos, "[H] EXIT");
+	l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Down, 8);
+	Tools::SfLogger::Print(22, l_textColor, l_textPos, "[H] EXIT");
 }
 
 void Game_Manager::SaveScore()
@@ -229,13 +229,13 @@ void Game_Manager::InputEvent(sf::Event& event)
 		switch (event.key.code)
 		{
 		case sf::Keyboard::P:
-			if (gameState == GameState::IsRunning)
+			if (EGameState == EGameState::IsRunning)
 			{
-				gameState = GameState::IsPause;
+				EGameState = EGameState::IsPause;
 			}
-			else if (gameState == GameState::IsPause)
+			else if (EGameState == EGameState::IsPause)
 			{
-				gameState = GameState::IsRunning;
+				EGameState = EGameState::IsRunning;
 			}
 			break;
 		case sf::Keyboard::R:
@@ -245,13 +245,13 @@ void Game_Manager::InputEvent(sf::Event& event)
 			Reset();
 			break;
 		case sf::Keyboard::H:
-			if (gameState == GameState::IsRunning)
+			if (EGameState == EGameState::IsRunning)
 			{
-				gameState = GameState::IsShowHighScore;
+				EGameState = EGameState::IsShowHighScore;
 			}
-			else if (gameState == GameState::IsShowHighScore)
+			else if (EGameState == EGameState::IsShowHighScore)
 			{
-				gameState = GameState::IsRunning;
+				EGameState = EGameState::IsRunning;
 			}
 			break;
 		}
@@ -278,7 +278,7 @@ void Game_Manager::Update()
 {
 	this->m_window.clear();
 
-	if (gameState == GameState::IsShowHighScore)
+	if (EGameState == EGameState::IsShowHighScore)
 		ShowHighScores();
 	else
 	{
@@ -287,7 +287,7 @@ void Game_Manager::Update()
 		DrawHUD();
 	}
 
-	Tools::Text::Draw(&m_window);
+	Tools::SfLogger::Draw(&m_window);
 
 	this->m_window.display();
 }
@@ -301,5 +301,5 @@ void Game_Manager::Reset()
 	SaveScore();
 	m_map_manager.ResetMap();
 	m_snake.Reset();
-	gameState = GameState::IsRunning;
+	EGameState = EGameState::IsRunning;
 }

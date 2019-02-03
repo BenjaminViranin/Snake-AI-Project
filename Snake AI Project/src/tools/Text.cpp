@@ -3,18 +3,16 @@
 
 #include "include/tools/Text.h"
 
-using namespace Tools;
+sf::Text Tools::SfLogger::__TEXT;
+sf::Font Tools::SfLogger::__FONT;
+std::string Tools::SfLogger::__STRING;
+std::vector<sf::Text> Tools::SfLogger::__TEXT_PACK;
 
-sf::Text Text::__TEXT;
-sf::Font Text::__FONT;
-std::string Text::__STRING;
-std::vector<sf::Text> Text::__TEXT_PACK;
+bool Tools::SfLogger::__SIZE_DEFINED = false;
+bool Tools::SfLogger::__COLOR_DEFINED = false;
+bool Tools::SfLogger::__POSITION_DEFINED = false;
 
-bool Text::__SIZE_DEFINED = false;
-bool Text::__COLOR_DEFINED = false;
-bool Text::__POSITION_DEFINED = false;
-
-Text::Text()
+Tools::SfLogger::SfLogger()
 {
 	if (!__FONT.loadFromFile("ressource/text/font/SAOUITT-Regular.ttf"))
 	{
@@ -22,22 +20,22 @@ Text::Text()
 	}
 }
 
-Tools::Text::~Text()
+Tools::SfLogger::~SfLogger()
 {
 	__TEXT_PACK.clear();
 }
 
-std::vector<sf::Text>& Text::Get_textPack()
+std::vector<sf::Text>& Tools::SfLogger::Get_textPack()
 {
 	return __TEXT_PACK;
 }
 
-void Text::ResetTextPack()
+void Tools::SfLogger::ResetTextPack()
 {
 	__TEXT_PACK.clear();
 }
 
-sf::Text Tools::Text::GetText(std::string p_text)
+sf::Text Tools::SfLogger::GetText(std::string p_text)
 {
 	for (auto element : __TEXT_PACK)
 	{
@@ -48,17 +46,17 @@ sf::Text Tools::Text::GetText(std::string p_text)
 	return sf::Text();
 }
 
-sf::Text Tools::Text::GetLastText()
+sf::Text Tools::SfLogger::GetLastText()
 {
 	return __TEXT_PACK.back();
 }
 
-sf::FloatRect Tools::Text::GetLastTextBounds()
+sf::FloatRect Tools::SfLogger::GetLastTextBounds()
 {
 	return __TEXT_PACK.back().getGlobalBounds();
 }
 
-sf::FloatRect Tools::Text::GetTextBounds(std::string p_text)
+sf::FloatRect Tools::SfLogger::GetTextBounds(std::string p_text)
 {
 	for (auto element : __TEXT_PACK)
 	{
@@ -69,7 +67,7 @@ sf::FloatRect Tools::Text::GetTextBounds(std::string p_text)
 	return sf::FloatRect();
 }
 
-sf::FloatRect Tools::Text::GetTextBounds(std::string p_text, float p_size)
+sf::FloatRect Tools::SfLogger::GetTextBounds(std::string p_text, float p_size)
 {
 	__TEXT.setCharacterSize(p_size);
 	__TEXT.setString(p_text);
@@ -79,25 +77,25 @@ sf::FloatRect Tools::Text::GetTextBounds(std::string p_text, float p_size)
 	return __TEXT.getGlobalBounds();
 }
 
-sf::Vector2f Tools::Text::GetPositionByOtherText(std::string p_otherText, std::string p_pos, float p_offset, float p_secondOffset)
+sf::Vector2f Tools::SfLogger::GetPositionByOtherText(std::string p_otherText, ETextPosition p_pos, float p_offset, float p_secondOffset)
 {
 	const sf::Vector2f l_otherTextPos = GetText(p_otherText).getPosition();
 	const sf::FloatRect l_otherTextBounds = GetTextBounds(p_otherText);
 
-	if (p_pos == UP)
+	if (p_pos == ETextPosition::Up)
 		return sf::Vector2f(l_otherTextPos.x + p_secondOffset, l_otherTextPos.y - l_otherTextBounds.height - p_offset);
-	if (p_pos == DOWN)
+	if (p_pos == ETextPosition::Down)
 		return sf::Vector2f(l_otherTextPos.x + p_secondOffset, l_otherTextPos.y + l_otherTextBounds.height + p_offset);
-	if (p_pos == LEFT)
+	if (p_pos == ETextPosition::Left)
 		return sf::Vector2f(l_otherTextPos.x - p_offset, l_otherTextPos.y + p_secondOffset);
-	if (p_pos == RIGHT)
+	if (p_pos == ETextPosition::Right)
 		return sf::Vector2f(l_otherTextPos.x + l_otherTextBounds.width + p_offset, l_otherTextPos.y + p_secondOffset);
 
 	std::cout << "Error in 'GetPositionByOtherText' \n";
 	return sf::Vector2f();
 }
 
-void Text::Draw(sf::RenderWindow* p_window)
+void Tools::SfLogger::Draw(sf::RenderWindow* p_window)
 {
 	for (uint16_t i = 0; i < __TEXT_PACK.size(); i++)
 	{
@@ -107,7 +105,7 @@ void Text::Draw(sf::RenderWindow* p_window)
 	ResetTextPack();
 }
 
-void Tools::Text::DrawTextsBounds(sf::RenderWindow* p_window)
+void Tools::SfLogger::DrawTextsBounds(sf::RenderWindow* p_window)
 {
 	sf::RectangleShape boundsShape;
 	boundsShape.setFillColor(sf::Color(255, 0, 0, 25));

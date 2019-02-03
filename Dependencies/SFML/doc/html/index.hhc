@@ -1790,11 +1790,6 @@
       </UL>
     <LI><OBJECT type="text/sitemap"><param name="Name" value="GlResource"><param name="Local" value="classsf_1_1GlResource.html"><param name="ImageNumber" value="1"></OBJECT>
       <UL>
-      <LI><OBJECT type="text/sitemap"><param name="Name" value="TransientContextLock"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html"><param name="ImageNumber" value="1"></OBJECT>
-        <UL>
-        <LI><OBJECT type="text/sitemap"><param name="Name" value="TransientContextLock"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html#a6434ee8f0380c300b361be038f37123a"><param name="ImageNumber" value="11"></OBJECT>
-        <LI><OBJECT type="text/sitemap"><param name="Name" value="~TransientContextLock"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html#a169285281b252ac8d54523b0fcc4b814"><param name="ImageNumber" value="11"></OBJECT>
-        </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="GlResource"><param name="Local" value="classsf_1_1GlResource.html#ad8fb7a0674f0f77e530dacc2a3b0dc6a"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="~GlResource"><param name="Local" value="classsf_1_1GlResource.html#ab99035b67052331d1e8cf67abd93de98"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="ensureGlContext"><param name="Local" value="classsf_1_1GlResource.html#ae0efa7935241644608ca32ba47b22a33"><param name="ImageNumber" value="11"></OBJECT>
@@ -2586,11 +2581,6 @@
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="GlResource"><param name="Local" value="classsf_1_1GlResource.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
-        <LI><OBJECT type="text/sitemap"><param name="Name" value="TransientContextLock"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html"><param name="ImageNumber" value="1"></OBJECT>
-          <UL>
-          <LI><OBJECT type="text/sitemap"><param name="Name" value="TransientContextLock"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html#a6434ee8f0380c300b361be038f37123a"><param name="ImageNumber" value="11"></OBJECT>
-          <LI><OBJECT type="text/sitemap"><param name="Name" value="~TransientContextLock"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html#a169285281b252ac8d54523b0fcc4b814"><param name="ImageNumber" value="11"></OBJECT>
-          </UL>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="GlResource"><param name="Local" value="classsf_1_1GlResource.html#ad8fb7a0674f0f77e530dacc2a3b0dc6a"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="~GlResource"><param name="Local" value="classsf_1_1GlResource.html#ab99035b67052331d1e8cf67abd93de98"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="ensureGlContext"><param name="Local" value="classsf_1_1GlResource.html#ae0efa7935241644608ca32ba47b22a33"><param name="ImageNumber" value="11"></OBJECT>
@@ -4195,7 +4185,6 @@
       <LI><OBJECT type="text/sitemap"><param name="Name" value="sf::Context"><param name="Local" value="classsf_1_1Context.html"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="sf::FileInputStream"><param name="Local" value="classsf_1_1FileInputStream.html"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="sf::Ftp"><param name="Local" value="classsf_1_1Ftp.html"><param name="ImageNumber" value="11"></OBJECT>
-      <LI><OBJECT type="text/sitemap"><param name="Name" value="sf::GlResource::TransientContextLock"><param name="Local" value="classsf_1_1GlResource_1_1TransientContextLock.html"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="sf::Http"><param name="Local" value="classsf_1_1Http.html"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="sf::InputSoundFile"><param name="Local" value="classsf_1_1InputSoundFile.html"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="sf::Lock"><param name="Local" value="classsf_1_1Lock.html"><param name="ImageNumber" value="11"></OBJECT>

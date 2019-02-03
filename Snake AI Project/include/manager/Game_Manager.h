@@ -10,7 +10,7 @@
 #include "Map_Manager.h"
 #include "../entity/Snake.h"
 
-enum class GameState
+enum class EGameState
 {
 	IsNotSet,
 	IsRunning,
@@ -23,7 +23,7 @@ enum class GameState
 class Game_Manager
 {
 public:
-	static GameState gameState;
+	static EGameState EGameState;
 
 private:
 	sf::RenderWindow m_window;
@@ -34,7 +34,7 @@ private:
 	/* Saves */
 	int m_saveLength;
 
-	Tools::Text m_textTools;
+	Tools::SfLogger m_textTools;
 	Map_Manager m_map_manager;
 	Snake m_snake;
 
