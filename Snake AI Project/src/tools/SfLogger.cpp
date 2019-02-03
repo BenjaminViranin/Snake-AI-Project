@@ -1,10 +1,10 @@
 
 #include <iostream>
 
-#include "include/tools/Text.h"
+#include "include/tools/SfLogger.h"
 
 sf::Text Tools::SfLogger::__TEXT;
-sf::Font Tools::SfLogger::__FONT;
+std::map<std::string, sf::Font> Tools::SfLogger::__FONT_MAP;
 std::string Tools::SfLogger::__STRING;
 std::vector<sf::Text> Tools::SfLogger::__TEXT_PACK;
 
@@ -14,10 +14,7 @@ bool Tools::SfLogger::__POSITION_DEFINED = false;
 
 Tools::SfLogger::SfLogger()
 {
-	if (!__FONT.loadFromFile("ressource/text/font/SAOUITT-Regular.ttf"))
-	{
-		std::cout << "ERROR : can't load Font \n";
-	}
+	LoadFont("SAO" ,"ressource/text/font/SAOUITT-Regular.ttf");
 }
 
 Tools::SfLogger::~SfLogger()
@@ -25,14 +22,27 @@ Tools::SfLogger::~SfLogger()
 	__TEXT_PACK.clear();
 }
 
-std::vector<sf::Text>& Tools::SfLogger::Get_textPack()
-{
-	return __TEXT_PACK;
-}
-
 void Tools::SfLogger::ResetTextPack()
 {
 	__TEXT_PACK.clear();
+}
+
+void Tools::SfLogger::LoadFont(std::string p_name, std::string p_path)
+{
+	sf::Font font;
+	if (!font.loadFromFile(p_path))
+	{
+		std::cout << "ERROR : can't load Font \n";
+	}
+	else
+	{
+		__FONT_MAP.emplace(p_name, font);
+	}
+}
+
+sf::Font Tools::SfLogger::GetFont(std::string p_name)
+{
+	return __FONT_MAP[p_name];
 }
 
 sf::Text Tools::SfLogger::GetText(std::string p_text)
@@ -71,7 +81,7 @@ sf::FloatRect Tools::SfLogger::GetTextBounds(std::string p_text, float p_size)
 {
 	__TEXT.setCharacterSize(p_size);
 	__TEXT.setString(p_text);
-	__TEXT.setFont(__FONT);
+	__TEXT.setFont(__FONT_MAP["SAO"]);
 	__TEXT.setStyle(sf::Text::Bold);
 
 	return __TEXT.getGlobalBounds();

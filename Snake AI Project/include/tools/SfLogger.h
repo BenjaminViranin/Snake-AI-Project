@@ -1,10 +1,11 @@
 #pragma once
 
-#ifndef __TEXT_MANAGER_H__
-#define __TEXT_MANAGER_H__
+#ifndef __SF_LOGGER_H__
+#define __SF_LOGGER_H__
 
 #include <sstream>
 #include <vector>
+#include <map>
 #include <string>
 
 #include <SFML/Graphics.hpp>
@@ -21,34 +22,11 @@ namespace Tools
 		Right
 	};
 
-	enum class ETextEncrage
-	{
-		UpLeft,
-		UpRight,
-		DownLeft,
-		DownRight,
-		Middle
-	};
-
 	class SfLogger
 	{
 	public:
 		SfLogger();
 		~SfLogger();
-
-		static std::vector<sf::Text>& Get_textPack();
-
-		static void ParamToString() {}
-
-		template<typename P1, typename ... Param>
-		static void ParamToString(const P1 &p1, const Param& ... param)
-		{
-			std::stringstream ss;
-			ss << p1;
-			__STRING += ss.str();
-
-			ParamToString(param...);
-		}
 
 		template<typename P1, typename ... Param>
 		static void Print(int p_size, const sf::Color p_color, const sf::Vector2f p_position,
@@ -63,7 +41,7 @@ namespace Tools
 
 			__TEXT.setString(__STRING);
 
-			__TEXT.setFont(__FONT);
+			__TEXT.setFont(__FONT_MAP["SAO"]);
 			__TEXT.setStyle(sf::Text::Bold);
 
 			__TEXT_PACK.push_back(__TEXT);
@@ -71,46 +49,9 @@ namespace Tools
 			__STRING = "";
 		}
 
-		template<typename P1, typename ... Param>
-		static void PrintDebug(const P1 &p1, const Param& ... param)
-		{
-			ParamToString(p1, param...);
+		static void LoadFont(std::string p_name, std::string p_path);
+		static sf::Font GetFont(std::string p_name);
 
-			if (!__TEXT_PACK.empty())
-			{
-				if (__TEXT_PACK.back().getPosition().x != 0)
-				{
-					for (int i = __TEXT_PACK.size() - 1; i >= 0; i--)
-					{
-						if (__TEXT_PACK[i].getPosition().x == 0)
-						{
-							__TEXT.setPosition(sf::Vector2f(0, __TEXT_PACK[i].getPosition().y + __TEXT_PACK[i].getCharacterSize()));
-							break;
-						}
-						else
-							__TEXT.setPosition(sf::Vector2f(0, 0));
-					}
-				}
-				else
-					__TEXT.setPosition(sf::Vector2f(0, __TEXT_PACK.back().getPosition().y + __TEXT_PACK.back().getCharacterSize()));
-			}
-			else
-				__TEXT.setPosition(sf::Vector2f(0, 0));
-
-			__TEXT.setCharacterSize(18);
-			__TEXT.setFillColor(sf::Color::Yellow);
-
-			__TEXT.setString(__STRING);
-
-			__TEXT.setFont(__FONT);
-			__TEXT.setStyle(sf::Text::Bold);
-
-			__TEXT_PACK.push_back(__TEXT);
-
-			__STRING = "";
-		}
-
-		static void ResetTextPack();
 		static sf::Text GetText(std::string p_text);
 		static sf::Text GetLastText();
 		static sf::FloatRect GetLastTextBounds();
@@ -124,9 +65,24 @@ namespace Tools
 		static void DrawTextsBounds(sf::RenderWindow* p_window);
 
 	private:
+		static void ParamToString() {}
+
+		template<typename P1, typename ... Param>
+		static void ParamToString(const P1 &p1, const Param& ... param)
+		{
+			std::stringstream ss;
+			ss << p1;
+			__STRING += ss.str();
+
+			ParamToString(param...);
+		}
+
+		static void ResetTextPack();
+
+	private:
 
 		static sf::Text __TEXT;
-		static sf::Font __FONT;
+		static std::map<std::string, sf::Font> __FONT_MAP;
 		static std::string __STRING;
 		static std::vector<sf::Text> __TEXT_PACK;
 
@@ -136,4 +92,4 @@ namespace Tools
 	};
 }
 
-#endif
+#endif // __SF_LOGGER_H__

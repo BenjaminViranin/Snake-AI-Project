@@ -18,12 +18,6 @@
     <ClInclude Include="include\tools\Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\manager\GameManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\manager\MapManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\manager\Game_Manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,7 +39,10 @@
     <ClInclude Include="include\entity\Snake.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tools\Text.h">
+    <ClInclude Include="include\tools\SfLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tools\SfText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,7 +65,10 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\tools\Text.cpp">
+    <ClCompile Include="src\tools\SfLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tools\SfText.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

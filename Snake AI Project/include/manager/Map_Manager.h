@@ -3,7 +3,7 @@
 #ifndef __MAP_MANAGER_H__
 #define __MAP_MANAGER_H__
 
-#include "../../include/tools/Text.h"
+#include "include/tools/SfLogger.h"
 
 struct Map_Coordinate
 {

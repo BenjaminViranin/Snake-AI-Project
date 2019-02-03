@@ -200,17 +200,19 @@ xcopy "$(ProjectDir)ressource" "$(SolutionDir)Build\ressource\" /e /y /i /r
     <ClInclude Include="include\manager\Map_Manager.h" />
     <ClInclude Include="include\tools\Animation_Manager.h" />
     <ClInclude Include="include\tools\Random.h" />
-    <ClInclude Include="include\tools\Text.h" />
+    <ClInclude Include="include\tools\SfLogger.h" />
+    <ClInclude Include="include\tools\SfText.h" />
     <ClInclude Include="include\tools\Time.h" />
     <ClInclude Include="include\tools\Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\tools\SfText.cpp" />
     <ClCompile Include="src\entity\Snake.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\manager\Game_Manager.cpp" />
     <ClCompile Include="src\manager\Map_Manager.cpp" />
     <ClCompile Include="src\tools\Random.cpp" />
-    <ClCompile Include="src\tools\Text.cpp" />
+    <ClCompile Include="src\tools\SfLogger.cpp" />
     <ClCompile Include="src\tools\Time.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

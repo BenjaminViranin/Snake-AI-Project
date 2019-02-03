@@ -6,9 +6,9 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "../tools/Text.h"
+#include "tools/SfLogger.h"
 #include "Map_Manager.h"
-#include "../entity/Snake.h"
+#include "entity/Snake.h"
 
 enum class EGameState
 {
