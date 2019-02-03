@@ -7,7 +7,7 @@ Snake::Snake(Map& p_map) :	m_lenght(0),									m_isAlive(true),
 							m_AI_Active(false),								m_moveSpeed(80.0f),
 							m_score(0),										
 							m_timeSinceLastMovement(sf::milliseconds(0)),	m_movementDirection(sf::Vector2i()),	
-							m_oldFirst(PrimitiveDirection::Idle),			m_map(p_map)
+							m_oldFirst(EPrimitiveDirection::Idle),			m_map(p_map)
 {
 }
 
@@ -95,7 +95,7 @@ void Snake::Move()
 			}
 			else
 			{
-				if (m_direction.second._primitive != PrimitiveDirection::Idle)
+				if (m_direction.second._primitive != EPrimitiveDirection::Idle)
 					MoveBody(previousSnakeHead);
 				UpdateMapGridCase(previousSnakeTail);
 				TryToEat();
@@ -124,7 +124,7 @@ void Snake::UpdateMapGridCase(const Map_Coordinate& p_previousTailPos)
 
 void Snake::InputProcess(sf::Event& event)
 {
-	/* Set PrimitiveDirection */
+	/* Set EPrimitiveDirection */
 	ProcessUpInput();
 	ProcessDownInput();
 	ProcessRightInput();
@@ -153,12 +153,12 @@ void Snake::ProcessUpInput()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		if (m_direction.second._primitive != PrimitiveDirection::GoDown)
+		if (m_direction.second._primitive != EPrimitiveDirection::GoDown)
 		{
 			m_direction.first._primitive = m_direction.second._primitive;
 			m_direction.first._isTreated = m_direction.second._isTreated;
 
-			m_direction.second._primitive = PrimitiveDirection::GoUp;
+			m_direction.second._primitive = EPrimitiveDirection::GoUp;
 			m_direction.second._isTreated = false;
 		}
 	}
@@ -168,12 +168,12 @@ void Snake::ProcessDownInput()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
-		if (m_direction.second._primitive != PrimitiveDirection::GoUp)
+		if (m_direction.second._primitive != EPrimitiveDirection::GoUp)
 		{
 			m_direction.first._primitive = m_direction.second._primitive;
 			m_direction.first._isTreated = m_direction.second._isTreated;
 
-			m_direction.second._primitive = PrimitiveDirection::GoDown;
+			m_direction.second._primitive = EPrimitiveDirection::GoDown;
 			m_direction.second._isTreated = false;
 		}
 	}
@@ -183,12 +183,12 @@ void Snake::ProcessRightInput()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		if (m_direction.second._primitive != PrimitiveDirection::GoLeft)
+		if (m_direction.second._primitive != EPrimitiveDirection::GoLeft)
 		{
 			m_direction.first._primitive = m_direction.second._primitive;
 			m_direction.first._isTreated = m_direction.second._isTreated;
 
-			m_direction.second._primitive = PrimitiveDirection::GoRight;
+			m_direction.second._primitive = EPrimitiveDirection::GoRight;
 			m_direction.second._isTreated = false;
 		}
 	}
@@ -198,12 +198,12 @@ void Snake::ProcessLeftInput()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		if (m_direction.second._primitive != PrimitiveDirection::GoRight)
+		if (m_direction.second._primitive != EPrimitiveDirection::GoRight)
 		{
 			m_direction.first._primitive = m_direction.second._primitive;
 			m_direction.first._isTreated = m_direction.second._isTreated;
 
-			m_direction.second._primitive = PrimitiveDirection::GoLeft;
+			m_direction.second._primitive = EPrimitiveDirection::GoLeft;
 			m_direction.second._isTreated = false;
 		}
 	}
@@ -296,27 +296,27 @@ sf::Vector2i Snake::GetMovementDirection()
 
 	switch (direction._primitive)
 	{
-	case PrimitiveDirection::GoUp:
+	case EPrimitiveDirection::GoUp:
 		if (m_movementDirection != sf::Vector2i(0, 1))
 			m_movementDirection = sf::Vector2i(0, -1);
 		break;
 
-	case PrimitiveDirection::GoDown:
+	case EPrimitiveDirection::GoDown:
 		if (m_movementDirection != sf::Vector2i(0, -1))
 			m_movementDirection = sf::Vector2i(0, 1);
 		break;
 
-	case PrimitiveDirection::GoRight:
+	case EPrimitiveDirection::GoRight:
 		if (m_movementDirection != sf::Vector2i(-1, 0))
 			m_movementDirection = sf::Vector2i(1, 0);
 		break;
 
-	case PrimitiveDirection::GoLeft:
+	case EPrimitiveDirection::GoLeft:
 		if (m_movementDirection != sf::Vector2i(1, 0))
 			m_movementDirection = sf::Vector2i(-1, 0);
 		break;
 
-	case PrimitiveDirection::Idle:
+	case EPrimitiveDirection::Idle:
 		m_movementDirection = sf::Vector2i(0, 0);
 		break;
 	}

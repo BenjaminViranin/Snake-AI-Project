@@ -8,7 +8,7 @@
 #include "../manager/map_manager.h"
 #include <mutex>
 
-enum class PrimitiveDirection
+enum class EPrimitiveDirection
 {
 	Idle,
 	GoUp,
@@ -20,9 +20,9 @@ enum class PrimitiveDirection
 struct Direction
 {
 	bool				_isTreated;
-	PrimitiveDirection	_primitive;
+	EPrimitiveDirection	_primitive;
 
-	Direction(PrimitiveDirection p_primitive = PrimitiveDirection::Idle) : 
+	Direction(EPrimitiveDirection p_primitive = EPrimitiveDirection::Idle) : 
 			  _isTreated(false), _primitive(p_primitive) {}
 };
 
@@ -47,7 +47,7 @@ private:
 	sf::Time						m_timeSinceLastMovement;
 	sf::Vector2i					m_movementDirection;
 	std::pair<Direction, Direction> m_direction;
-	PrimitiveDirection				m_oldFirst;
+	EPrimitiveDirection				m_oldFirst;
 
 	/* Body, Color */
 	sf::RectangleShape			m_bodyPart;
