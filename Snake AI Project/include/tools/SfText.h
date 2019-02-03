@@ -24,25 +24,41 @@ namespace Tools
 		~SfText();
 
 		void SetSize(int p_size);
-		void SetFont(sf::Font p_font);
+		void SetFont(sf::Font& p_font);
 		void SetColor(sf::Color p_color);
 		void SetPosition(sf::Vector2f p_position);
-		void SetTextEncrage(ETextEncrage p_textEncrage);
+		void SetOrigin(ETextEncrage p_textEncrage);
 
 		template<typename P1, typename ... Param>
-		static void SetText(const P1 &p1, const Param& ... param)
+		void SetText(const P1 &p1, const Param& ... param)
+		{
+			STRING = "";
+
+			ParamToString(p1, param...);
+
+			TEXT.setString(STRING);
+		}
+
+		const int& GetSize();
+		const sf::Font& GetFont();
+		const sf::Color& GetColor();
+		const sf::Vector2f& GetPosition();
+		const sf::Text& GetText();
+
+		const sf::FloatRect& GetBounds();
+
+	private:
+		void ParamToString() {}
+
+		template<typename P1, typename ... Param>
+		void ParamToString(const P1 &p1, const Param& ... param)
 		{
 			std::stringstream ss;
 			ss << p1;
 			STRING += ss.str();
 
-			SetText(param...);
+			ParamToString(param...);
 		}
-
-		int GetSize();
-		sf::Font GetFont();
-		sf::Color GetColor();
-		sf::Vector2f GetPosition();
 
 	private:
 

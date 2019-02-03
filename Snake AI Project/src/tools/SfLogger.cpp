@@ -3,14 +3,11 @@
 
 #include "include/tools/SfLogger.h"
 
-sf::Text Tools::SfLogger::__TEXT;
+//sf::Text Tools::SfLogger::__TEXT;
+Tools::SfText Tools::SfLogger::DEFAULT_TEXT;
 std::map<std::string, sf::Font> Tools::SfLogger::__FONT_MAP;
-std::string Tools::SfLogger::__STRING;
-std::vector<sf::Text> Tools::SfLogger::__TEXT_PACK;
-
-bool Tools::SfLogger::__SIZE_DEFINED = false;
-bool Tools::SfLogger::__COLOR_DEFINED = false;
-bool Tools::SfLogger::__POSITION_DEFINED = false;
+//std::string Tools::SfLogger::__STRING;
+std::vector<Tools::SfText> Tools::SfLogger::__TEXT_PACK;
 
 Tools::SfLogger::SfLogger()
 {
@@ -40,57 +37,57 @@ void Tools::SfLogger::LoadFont(std::string p_name, std::string p_path)
 	}
 }
 
-sf::Font Tools::SfLogger::GetFont(std::string p_name)
+sf::Font& Tools::SfLogger::GetFont(std::string p_name)
 {
 	return __FONT_MAP[p_name];
 }
 
-sf::Text Tools::SfLogger::GetText(std::string p_text)
+Tools::SfText Tools::SfLogger::GetText(std::string p_text)
 {
 	for (auto element : __TEXT_PACK)
 	{
-		if (element.getString() == p_text)
+		if (element.GetText().getString() == p_text)
 			return element;
 	}
 	std::cout << "error in 'GetText' : text not found \n";
-	return sf::Text();
+	return SfText();
 }
 
-sf::Text Tools::SfLogger::GetLastText()
+Tools::SfText Tools::SfLogger::GetLastText()
 {
 	return __TEXT_PACK.back();
 }
 
-sf::FloatRect Tools::SfLogger::GetLastTextBounds()
-{
-	return __TEXT_PACK.back().getGlobalBounds();
-}
+//sf::FloatRect Tools::SfLogger::GetLastTextBounds()
+//{
+//	return __TEXT_PACK.back().getGlobalBounds();
+//}
+//
+//sf::FloatRect Tools::SfLogger::GetTextBounds(std::string p_text)
+//{
+//	for (auto element : __TEXT_PACK)
+//	{
+//		if (element.getString() == p_text)
+//			return element.getGlobalBounds();
+//	}
+//	std::cout << "error in 'GetTextBounds' : text not found \n";
+//	return sf::FloatRect();
+//}
+//
+//sf::FloatRect Tools::SfLogger::GetTextBounds(std::string p_text, float p_size)
+//{
+//	__TEXT.setCharacterSize(p_size);
+//	__TEXT.setString(p_text);
+//	__TEXT.setFont(__FONT_MAP["SAO"]);
+//	__TEXT.setStyle(sf::Text::Bold);
+//
+//	return __TEXT.getGlobalBounds();
+//}
 
-sf::FloatRect Tools::SfLogger::GetTextBounds(std::string p_text)
+sf::Vector2f Tools::SfLogger::GetPositionByOtherText(SfText p_otherText, ETextPosition p_pos, float p_offset, float p_secondOffset)
 {
-	for (auto element : __TEXT_PACK)
-	{
-		if (element.getString() == p_text)
-			return element.getGlobalBounds();
-	}
-	std::cout << "error in 'GetTextBounds' : text not found \n";
-	return sf::FloatRect();
-}
-
-sf::FloatRect Tools::SfLogger::GetTextBounds(std::string p_text, float p_size)
-{
-	__TEXT.setCharacterSize(p_size);
-	__TEXT.setString(p_text);
-	__TEXT.setFont(__FONT_MAP["SAO"]);
-	__TEXT.setStyle(sf::Text::Bold);
-
-	return __TEXT.getGlobalBounds();
-}
-
-sf::Vector2f Tools::SfLogger::GetPositionByOtherText(std::string p_otherText, ETextPosition p_pos, float p_offset, float p_secondOffset)
-{
-	const sf::Vector2f l_otherTextPos = GetText(p_otherText).getPosition();
-	const sf::FloatRect l_otherTextBounds = GetTextBounds(p_otherText);
+	const sf::Vector2f l_otherTextPos = p_otherText.GetPosition();
+	const sf::FloatRect l_otherTextBounds = p_otherText.GetBounds();
 
 	if (p_pos == ETextPosition::Up)
 		return sf::Vector2f(l_otherTextPos.x + p_secondOffset, l_otherTextPos.y - l_otherTextBounds.height - p_offset);
@@ -100,8 +97,7 @@ sf::Vector2f Tools::SfLogger::GetPositionByOtherText(std::string p_otherText, ET
 		return sf::Vector2f(l_otherTextPos.x - p_offset, l_otherTextPos.y + p_secondOffset);
 	if (p_pos == ETextPosition::Right)
 		return sf::Vector2f(l_otherTextPos.x + l_otherTextBounds.width + p_offset, l_otherTextPos.y + p_secondOffset);
-
-	std::cout << "Error in 'GetPositionByOtherText' \n";
+	
 	return sf::Vector2f();
 }
 
@@ -109,7 +105,7 @@ void Tools::SfLogger::Draw(sf::RenderWindow* p_window)
 {
 	for (uint16_t i = 0; i < __TEXT_PACK.size(); i++)
 	{
-		p_window->draw(__TEXT_PACK[i]);
+		p_window->draw(__TEXT_PACK[i].GetText());
 	}
 
 	ResetTextPack();
@@ -124,10 +120,10 @@ void Tools::SfLogger::DrawTextsBounds(sf::RenderWindow* p_window)
 
 	for (uint16_t i = 0; i < __TEXT_PACK.size(); i++)
 	{
-		sf::FloatRect bounds = __TEXT_PACK[i].getGlobalBounds();
+		sf::FloatRect bounds = __TEXT_PACK[i].GetBounds();
 		boundsShape.setSize(sf::Vector2f(bounds.width, bounds.height));
-		boundsShape.setPosition(sf::Vector2f(__TEXT_PACK[i].getPosition().x + bounds.width * 0.025f,
-											 __TEXT_PACK[i].getPosition().y + bounds.height * 0.225));
+		boundsShape.setPosition(sf::Vector2f(__TEXT_PACK[i].GetPosition().x + bounds.width * 0.025f,
+											 __TEXT_PACK[i].GetPosition().y + bounds.height * 0.225));
 		p_window->draw(boundsShape);
 	}
 }

@@ -12,6 +12,8 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 
+#include "tools/SfText.h"
+
 namespace Tools
 {
 	enum class ETextPosition
@@ -32,32 +34,34 @@ namespace Tools
 		static void Print(int p_size, const sf::Color p_color, const sf::Vector2f p_position,
 			const P1 &p1, const Param& ... param)
 		{
-			__TEXT.setCharacterSize(p_size);
-			__TEXT.setFillColor(p_color);
+			DEFAULT_TEXT.SetSize(p_size);
+			DEFAULT_TEXT.SetColor(p_color);
 
-			__TEXT.setPosition(p_position);
+			DEFAULT_TEXT.SetPosition(p_position);
 
-			ParamToString(p1, param...);
+			DEFAULT_TEXT.SetText(p1, param...);
 
-			__TEXT.setString(__STRING);
+			//__TEXT.setString(__STRING);
 
-			__TEXT.setFont(__FONT_MAP["SAO"]);
-			__TEXT.setStyle(sf::Text::Bold);
+			DEFAULT_TEXT.SetFont(__FONT_MAP["SAO"]);
 
-			__TEXT_PACK.push_back(__TEXT);
+			__TEXT_PACK.push_back(DEFAULT_TEXT);
+		}
 
-			__STRING = "";
+		static void Print(SfText p_text)
+		{
+			__TEXT_PACK.push_back(p_text);
 		}
 
 		static void LoadFont(std::string p_name, std::string p_path);
-		static sf::Font GetFont(std::string p_name);
+		static sf::Font& GetFont(std::string p_name);
 
-		static sf::Text GetText(std::string p_text);
-		static sf::Text GetLastText();
-		static sf::FloatRect GetLastTextBounds();
-		static sf::FloatRect GetTextBounds(std::string p_text);
-		static sf::FloatRect GetTextBounds(std::string p_text, float p_size);
-		static sf::Vector2f GetPositionByOtherText(std::string p_otherText, ETextPosition p_pos, float p_offset, float p_secondOffset = 0.0f);
+		static SfText GetText(std::string p_text);
+		static SfText GetLastText();
+		//static sf::FloatRect GetLastTextBounds();
+		//static sf::FloatRect GetTextBounds(std::string p_text);
+		//static sf::FloatRect GetTextBounds(std::string p_text, float p_size);
+		static sf::Vector2f GetPositionByOtherText(SfText p_otherText, ETextPosition p_pos, float p_offset, float p_secondOffset = 0.0f);
 
 		/* Draw and clear */
 		static void Draw(sf::RenderWindow* p_window);
@@ -65,7 +69,7 @@ namespace Tools
 		static void DrawTextsBounds(sf::RenderWindow* p_window);
 
 	private:
-		static void ParamToString() {}
+		/*static void ParamToString() {}
 
 		template<typename P1, typename ... Param>
 		static void ParamToString(const P1 &p1, const Param& ... param)
@@ -76,19 +80,17 @@ namespace Tools
 
 			ParamToString(param...);
 		}
-
+*/
 		static void ResetTextPack();
 
 	private:
 
-		static sf::Text __TEXT;
-		static std::map<std::string, sf::Font> __FONT_MAP;
-		static std::string __STRING;
-		static std::vector<sf::Text> __TEXT_PACK;
+		static SfText DEFAULT_TEXT;
+		/*static sf::Text __TEXT;
+		static std::string __STRING;*/
 
-		static bool __SIZE_DEFINED;
-		static bool __COLOR_DEFINED;
-		static bool __POSITION_DEFINED;
+		static std::map<std::string, sf::Font> __FONT_MAP;
+		static std::vector<SfText> __TEXT_PACK;
 	};
 }
 
