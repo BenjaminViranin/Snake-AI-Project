@@ -3,11 +3,9 @@
 
 #include "include/tools/SfLogger.h"
 
-//sf::Text Tools::SfLogger::__TEXT;
-Tools::SfText Tools::SfLogger::DEFAULT_TEXT;
+Tools::SfText Tools::SfLogger::__DEFAULT_TEXT;
 std::map<std::string, sf::Font> Tools::SfLogger::__FONT_MAP;
-//std::string Tools::SfLogger::__STRING;
-std::vector<Tools::SfText> Tools::SfLogger::__TEXT_PACK;
+std::vector<std::reference_wrapper<Tools::SfText>> Tools::SfLogger::__TEXT_PACK;
 
 Tools::SfLogger::SfLogger()
 {
@@ -22,6 +20,11 @@ Tools::SfLogger::~SfLogger()
 void Tools::SfLogger::ResetTextPack()
 {
 	__TEXT_PACK.clear();
+}
+
+void Tools::SfLogger::Save(SfText& p_text)
+{
+	__TEXT_PACK.emplace_back(p_text);
 }
 
 void Tools::SfLogger::LoadFont(std::string p_name, std::string p_path)
@@ -46,7 +49,7 @@ Tools::SfText Tools::SfLogger::GetText(std::string p_text)
 {
 	for (auto element : __TEXT_PACK)
 	{
-		if (element.GetText().getString() == p_text)
+		if (element.get().GetText().getString() == p_text)
 			return element;
 	}
 	std::cout << "error in 'GetText' : text not found \n";
@@ -55,57 +58,14 @@ Tools::SfText Tools::SfLogger::GetText(std::string p_text)
 
 Tools::SfText Tools::SfLogger::GetLastText()
 {
-	return __TEXT_PACK.back();
-}
-
-//sf::FloatRect Tools::SfLogger::GetLastTextBounds()
-//{
-//	return __TEXT_PACK.back().getGlobalBounds();
-//}
-//
-//sf::FloatRect Tools::SfLogger::GetTextBounds(std::string p_text)
-//{
-//	for (auto element : __TEXT_PACK)
-//	{
-//		if (element.getString() == p_text)
-//			return element.getGlobalBounds();
-//	}
-//	std::cout << "error in 'GetTextBounds' : text not found \n";
-//	return sf::FloatRect();
-//}
-//
-//sf::FloatRect Tools::SfLogger::GetTextBounds(std::string p_text, float p_size)
-//{
-//	__TEXT.setCharacterSize(p_size);
-//	__TEXT.setString(p_text);
-//	__TEXT.setFont(__FONT_MAP["SAO"]);
-//	__TEXT.setStyle(sf::Text::Bold);
-//
-//	return __TEXT.getGlobalBounds();
-//}
-
-sf::Vector2f Tools::SfLogger::GetPositionByOtherText(SfText p_otherText, ETextPosition p_pos, float p_offset, float p_secondOffset)
-{
-	const sf::Vector2f l_otherTextPos = p_otherText.GetPosition();
-	const sf::FloatRect l_otherTextBounds = p_otherText.GetBounds();
-
-	if (p_pos == ETextPosition::Up)
-		return sf::Vector2f(l_otherTextPos.x + p_secondOffset, l_otherTextPos.y - l_otherTextBounds.height - p_offset);
-	if (p_pos == ETextPosition::Down)
-		return sf::Vector2f(l_otherTextPos.x + p_secondOffset, l_otherTextPos.y + l_otherTextBounds.height + p_offset);
-	if (p_pos == ETextPosition::Left)
-		return sf::Vector2f(l_otherTextPos.x - p_offset, l_otherTextPos.y + p_secondOffset);
-	if (p_pos == ETextPosition::Right)
-		return sf::Vector2f(l_otherTextPos.x + l_otherTextBounds.width + p_offset, l_otherTextPos.y + p_secondOffset);
-	
-	return sf::Vector2f();
+	return __TEXT_PACK.back().get();
 }
 
 void Tools::SfLogger::Draw(sf::RenderWindow* p_window)
 {
 	for (uint16_t i = 0; i < __TEXT_PACK.size(); i++)
 	{
-		p_window->draw(__TEXT_PACK[i].GetText());
+		p_window->draw(__TEXT_PACK[i].get().GetText());
 	}
 
 	ResetTextPack();
@@ -120,10 +80,10 @@ void Tools::SfLogger::DrawTextsBounds(sf::RenderWindow* p_window)
 
 	for (uint16_t i = 0; i < __TEXT_PACK.size(); i++)
 	{
-		sf::FloatRect bounds = __TEXT_PACK[i].GetBounds();
+		sf::FloatRect bounds = __TEXT_PACK[i].get().GetBounds();
 		boundsShape.setSize(sf::Vector2f(bounds.width, bounds.height));
-		boundsShape.setPosition(sf::Vector2f(__TEXT_PACK[i].GetPosition().x + bounds.width * 0.025f,
-											 __TEXT_PACK[i].GetPosition().y + bounds.height * 0.225));
+		boundsShape.setPosition(sf::Vector2f(__TEXT_PACK[i].get().GetPosition().x + bounds.width * 0.025f,
+											 __TEXT_PACK[i].get().GetPosition().y + bounds.height * 0.225));
 		p_window->draw(boundsShape);
 	}
 }

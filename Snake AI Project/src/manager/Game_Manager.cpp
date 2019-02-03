@@ -66,84 +66,130 @@ void Game_Manager::Loop()
 
 void Game_Manager::DrawHUD()
 {
-	sf::Color l_textColor = sf::Color(135, 206, 250);
-	float l_heightTextOffset = 4.0f;
+	const sf::Color textColor = sf::Color(135, 206, 250);
+	const float heightTextOffset = 4.0f;
 
-	//// Draw Pause
-	//if (EGameState == EGameState::IsPause)
-	//{
-	//	Tools::SfText pause;
-	//	pause.SetFont(Tools::SfLogger::GetFont("SAO"));
-	//	pause.SetSize(50);
-	//	pause.SetColor(l_textColor);
-	//	pause.SetOrigin(Tools::ETextEncrage::Middle);
-	//	pause.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, m_windowHeight * 0.5f));
-	//	Tools::SfLogger::Print(pause);
-	//}
+	// Draw Pause
+	if (EGameState == EGameState::IsPause)
+	{
+		pause.SetFont(Tools::SfLogger::GetFont("SAO"));
+		pause.SetSize(50);
+		pause.SetColor(textColor);
+		pause.SetOrigin(Tools::ETextEncrage::Middle);
+		pause.SetText("PAUSE");
+		pause.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, m_windowHeight * 0.5f));
+		Tools::SfLogger::Save(pause);
+	}
 
-	//// Draw Game Over
-	//if (EGameState == EGameState::IsGameOver)
-	//{
-	//	Tools::SfText GameOver;
-	//	GameOver.SetFont(Tools::SfLogger::GetFont("SAO"));
-	//	GameOver.SetSize(50);
-	//	GameOver.SetColor(sf::Color::Red);
-	//	GameOver.SetOrigin(Tools::ETextEncrage::Middle);
-	//	GameOver.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, m_windowHeight * 0.5f));
-	//	Tools::SfLogger::Print(GameOver);
-	//}
+	// Draw Game Over
+	if (EGameState == EGameState::IsGameOver)
+	{
+		GameOver.SetFont(Tools::SfLogger::GetFont("SAO"));
+		GameOver.SetSize(50);
+		GameOver.SetColor(sf::Color::Red);
+		GameOver.SetOrigin(Tools::ETextEncrage::Middle);
+		GameOver.SetText("GAME OVER");
+		GameOver.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, m_windowHeight * 0.5f));
+		Tools::SfLogger::Save(GameOver);
+	}
 
 	// Draw Score
-	Tools::SfText score;
 	score.SetFont(Tools::SfLogger::GetFont("SAO"));
 	score.SetSize(50);
-	score.SetColor(l_textColor);
-	score.SetPosition(sf::Vector2f(10, 10));
+	score.SetColor(textColor);
 	score.SetText("SCORE: ", m_snake.GetScore());
-	Tools::SfLogger::Print(score);
+	score.SetPosition(sf::Vector2f(10, 10));
+	Tools::SfLogger::Save(score);
 
-	//// Draw FPS
-	//l_textPos = sf::Vector2f(static_cast<float>(m_windowWidth - 450), static_cast<float>(10));
-	//Tools::SfLogger::Print(22, l_textColor, l_textPos, "FPS : ");
-	//l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Right, 2);
-	//Tools::SfLogger::Print(22, sf::Color(253, 106, 2), l_textPos, Tools::Time::GetFPS());
+	// Draw FPS
+	fps.SetFont(Tools::SfLogger::GetFont("SAO"));
+	fps.SetSize(22);
+	fps.SetColor(textColor);
+	fps.SetText("FPS : ");
+	fps.SetPosition(sf::Vector2f(static_cast<float>(m_windowWidth - 450), static_cast<float>(10)));
+	Tools::SfLogger::Save(fps);
 
-	//// Draw Pause
-	//l_textPos = Tools::SfLogger::GetPositionByOtherText("FPS : ", Tools::ETextPosition::Down, l_heightTextOffset);
-	//Tools::SfLogger::Print(22, l_textColor, l_textPos, "[P] Pause: ");
-	//l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Right, 2);
-	//Tools::SfLogger::Print(22, EGameState == EGameState::IsPause ? sf::Color::Green : sf::Color::Red, l_textPos, EGameState == EGameState::IsPause ? "true" : "false");
-	//
-	//// Draw Reset Game
-	//l_textPos = Tools::SfLogger::GetPositionByOtherText("[P] Pause: ", Tools::ETextPosition::Down, l_heightTextOffset);
-	//Tools::SfLogger::Print(22, l_textColor, l_textPos, "[R][Return] Reset Game");
+	fpsValue.SetFont(Tools::SfLogger::GetFont("SAO"));
+	fpsValue.SetSize(22);
+	fpsValue.SetColor(sf::Color(253, 106, 2));
+	fpsValue.SetText(Tools::Time::GetFPS());
+	fpsValue.SetPositionWithOtherText(fps, Tools::ETextPosition::Right, 2);
+	Tools::SfLogger::Save(fpsValue);
 
-	//// Draw Quit
-	//l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Down, l_heightTextOffset);
-	//Tools::SfLogger::Print(22, l_textColor, l_textPos, "[Escape] Quit Game");
+	// Draw Pause
+	pause.SetFont(Tools::SfLogger::GetFont("SAO"));
+	pause.SetSize(22);
+	pause.SetColor(textColor);
+	pause.SetText("[P] Pause: ");
+	pause.SetPositionWithOtherText(fps, Tools::ETextPosition::Down, heightTextOffset);
+	Tools::SfLogger::Save(pause);
 
-	//// Draw Draw Grid
-	//l_textPos = Tools::SfLogger::GetPositionByOtherText("FPS : ", Tools::ETextPosition::Right, 200);
-	//Tools::SfLogger::Print(22, l_textColor, l_textPos,"[G] Draw Grid: ");
-	//l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Right, 2);
-	//Tools::SfLogger::Print(22, m_map_manager.IsDrawGrid() ? sf::Color::Green : sf::Color::Red, l_textPos, m_map_manager.IsDrawGrid() ? "true" : "false");
+	pauseValue.SetFont(Tools::SfLogger::GetFont("SAO"));
+	pauseValue.SetSize(22);
+	pauseValue.SetColor(EGameState == EGameState::IsPause ? sf::Color::Green : sf::Color::Red);
+	pauseValue.SetText(EGameState == EGameState::IsPause ? "true" : "false");
+	pauseValue.SetPositionWithOtherText(pause, Tools::ETextPosition::Right, 2);
+	Tools::SfLogger::Save(pauseValue);
+	
+	// Draw Reset Game
+	resetGame.SetFont(Tools::SfLogger::GetFont("SAO"));
+	resetGame.SetSize(22);
+	resetGame.SetColor(textColor);
+	resetGame.SetText("[R][Return] Reset Game");
+	resetGame.SetPositionWithOtherText(pause, Tools::ETextPosition::Down, heightTextOffset);
+	Tools::SfLogger::Save(resetGame);
 
-	//// Draw Snake Speed
-	//l_textPos = Tools::SfLogger::GetPositionByOtherText("[G] Draw Grid: ", Tools::ETextPosition::Down, l_heightTextOffset);
-	//Tools::SfLogger::Print(22, l_textColor, l_textPos, "[-][+] Snake Speed: ");
-	//l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Right, 2);
-	//Tools::SfLogger::Print(22, m_snake.GetSpeed() < 50 ? sf::Color::Red : m_snake.GetSpeed() > 85 ? sf::Color::Red : sf::Color::Green, l_textPos, m_snake.GetSpeed());
+	// Draw Quit
+	quit.SetFont(Tools::SfLogger::GetFont("SAO"));
+	quit.SetSize(22);
+	quit.SetColor(textColor);
+	quit.SetText("[Escape] Quit Game");
+	quit.SetPositionWithOtherText(resetGame, Tools::ETextPosition::Down, heightTextOffset);
+	Tools::SfLogger::Save(quit);
 
-	//// Draw Show High Scores
-	//l_textPos = Tools::SfLogger::GetPositionByOtherText("[-][+] Snake Speed: ", Tools::ETextPosition::Down, l_heightTextOffset);
-	//Tools::SfLogger::Print(22, l_textColor, l_textPos, "[H] Show High Scores");
+	// Draw Draw Grid
+	drawGrid.SetFont(Tools::SfLogger::GetFont("SAO"));
+	drawGrid.SetSize(22);
+	drawGrid.SetColor(textColor);
+	drawGrid.SetText("[G] Draw Grid: ");
+	drawGrid.SetPositionWithOtherText(fps, Tools::ETextPosition::Right, 200);
+	Tools::SfLogger::Save(drawGrid);
+
+	drawGridValue.SetFont(Tools::SfLogger::GetFont("SAO"));
+	drawGridValue.SetSize(22);
+	drawGridValue.SetColor(m_map_manager.IsDrawGrid() ? sf::Color::Green : sf::Color::Red);
+	drawGridValue.SetText(m_map_manager.IsDrawGrid() ? "true" : "false");
+	drawGridValue.SetPositionWithOtherText(drawGrid, Tools::ETextPosition::Right, 2);
+	Tools::SfLogger::Save(drawGridValue);
+
+	// Draw Snake Speed
+	snakeSpeed.SetFont(Tools::SfLogger::GetFont("SAO"));
+	snakeSpeed.SetSize(22);
+	snakeSpeed.SetColor(textColor);
+	snakeSpeed.SetText("[-][+] Snake Speed: ");
+	snakeSpeed.SetPositionWithOtherText(drawGrid, Tools::ETextPosition::Down, heightTextOffset);
+	Tools::SfLogger::Save(snakeSpeed);
+
+	snakeSpeedValue.SetFont(Tools::SfLogger::GetFont("SAO"));
+	snakeSpeedValue.SetSize(22);
+	snakeSpeedValue.SetColor(m_snake.GetSpeed() < 50 ? sf::Color::Red : m_snake.GetSpeed() > 85 ? sf::Color::Red : sf::Color::Green);
+	snakeSpeedValue.SetText(m_snake.GetSpeed());
+	snakeSpeedValue.SetPositionWithOtherText(snakeSpeed, Tools::ETextPosition::Right, 2);
+	Tools::SfLogger::Save(snakeSpeedValue);
+
+	// Draw Show High Scores
+	showHighScores.SetFont(Tools::SfLogger::GetFont("SAO"));
+	showHighScores.SetSize(22);
+	showHighScores.SetColor(textColor);
+	showHighScores.SetText("[H] Show High Scores ");
+	showHighScores.SetPositionWithOtherText(snakeSpeed, Tools::ETextPosition::Down, heightTextOffset);
+	Tools::SfLogger::Save(showHighScores);
 }
 
 void Game_Manager::ShowHighScores()
 {
 	sf::Color l_textColor = sf::Color(135, 206, 250);
 	sf::Vector2f l_textPos;
-	float l_heightTextOffset = 4.0f;
 
 	std::vector<std::pair<std::string, int>> l_saveData;
 	LoadScore(l_saveData);
@@ -156,11 +202,11 @@ void Game_Manager::ShowHighScores()
 		else
 			l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Down, 4);
 
-		Tools::SfLogger::Print(22, l_textColor, l_textPos, l_saveData[i].first, std::to_string(l_saveData[i].second));
+		Tools::SfLogger::Save(22, l_textColor, l_textPos, l_saveData[i].first, std::to_string(l_saveData[i].second));
 	}
 
 	l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Down, 8);
-	Tools::SfLogger::Print(22, l_textColor, l_textPos, "[H] EXIT");*/
+	Tools::SfLogger::Save(22, l_textColor, l_textPos, "[H] EXIT");*/
 }
 
 void Game_Manager::SaveScore()

@@ -25,6 +25,20 @@ class Game_Manager
 public:
 	static EGameState EGameState;
 
+	Tools::SfText GameOver;
+	Tools::SfText score;
+	Tools::SfText fps;
+	Tools::SfText fpsValue;
+	Tools::SfText pause;
+	Tools::SfText pauseValue;
+	Tools::SfText resetGame;
+	Tools::SfText quit;
+	Tools::SfText drawGrid;
+	Tools::SfText drawGridValue;
+	Tools::SfText snakeSpeed;
+	Tools::SfText snakeSpeedValue;
+	Tools::SfText showHighScores;
+
 private:
 	sf::RenderWindow m_window;
 	bool m_isFullScreen;

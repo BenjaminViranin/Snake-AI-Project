@@ -52,24 +52,46 @@ void Tools::SfText::SetPosition(sf::Vector2f p_position)
 		position = p_position;
 		break;
 	case ETextEncrage::UpRight: 
-		position = sf::Vector2f(p_position.x + TEXT.getGlobalBounds().width,
+		position = sf::Vector2f(p_position.x - TEXT.getGlobalBounds().width,
 								p_position.y);
 		break;
 	case ETextEncrage::DownLeft: 
 		position = sf::Vector2f(p_position.x,
-								p_position.y + TEXT.getGlobalBounds().height);
+								p_position.y - TEXT.getGlobalBounds().height);
 		break;
 	case ETextEncrage::DownRight: 
-		position = sf::Vector2f(p_position.x + TEXT.getGlobalBounds().width,
-								p_position.y + TEXT.getGlobalBounds().height);
+		position = sf::Vector2f(p_position.x - TEXT.getGlobalBounds().width,
+								p_position.y - TEXT.getGlobalBounds().height);
 		break;
 	case ETextEncrage::Middle: 
-		position = sf::Vector2f(p_position.x + TEXT.getGlobalBounds().width * 0.5f,
-								p_position.y + TEXT.getGlobalBounds().height * 0.5f);
+		position = sf::Vector2f(p_position.x - TEXT.getGlobalBounds().width * 0.5f,
+								p_position.y - TEXT.getGlobalBounds().height * 0.5f);
 		break;
 	}
 
 	TEXT.setPosition(position);
+}
+
+void Tools::SfText::SetPositionWithOtherText(SfText p_otherText, ETextPosition p_pos, float p_offset, float p_secondOffset)
+{
+	const sf::Vector2f otherTextPos = p_otherText.GetPosition();
+	const sf::FloatRect otherTextBounds = p_otherText.GetBounds();
+
+	switch (p_pos) 
+	{ 
+	case ETextPosition::Up: 
+		SetPosition(sf::Vector2f(otherTextPos.x + p_secondOffset, otherTextPos.y - otherTextBounds.height - p_offset));
+		break;
+	case ETextPosition::Down: 
+		SetPosition(sf::Vector2f(otherTextPos.x + p_secondOffset, otherTextPos.y + otherTextBounds.height + p_offset));
+		break;
+	case ETextPosition::Left: 
+		SetPosition(sf::Vector2f(otherTextPos.x - p_offset, otherTextPos.y + p_secondOffset));
+		break;
+	case ETextPosition::Right: 
+		SetPosition(sf::Vector2f(otherTextPos.x + otherTextBounds.width + p_offset, otherTextPos.y + p_secondOffset));
+		break;
+	}
 }
 
 void Tools::SfText::SetOrigin(ETextEncrage p_textEncrage)
@@ -102,7 +124,7 @@ const sf::Text& Tools::SfText::GetText()
 	return TEXT;
 }
 
-const sf::FloatRect& Tools::SfText::GetBounds()
+const sf::FloatRect Tools::SfText::GetBounds()
 {
 	return TEXT.getGlobalBounds();
 }

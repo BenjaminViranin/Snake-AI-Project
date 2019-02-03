@@ -7,6 +7,14 @@
 
 namespace Tools
 {
+	enum class ETextPosition
+	{
+		Up,
+		Down,
+		Left,
+		Right
+	};
+
 	enum class ETextEncrage
 	{
 		UpLeft,
@@ -16,7 +24,7 @@ namespace Tools
 		Middle
 	};
 
-	struct SfText
+	class SfText
 	{
 	public:
 		SfText();
@@ -27,6 +35,7 @@ namespace Tools
 		void SetFont(sf::Font& p_font);
 		void SetColor(sf::Color p_color);
 		void SetPosition(sf::Vector2f p_position);
+		void SetPositionWithOtherText(SfText p_otherText, ETextPosition p_pos, float p_offset, float p_secondOffset = 0.0f);
 		void SetOrigin(ETextEncrage p_textEncrage);
 
 		template<typename P1, typename ... Param>
@@ -44,8 +53,7 @@ namespace Tools
 		const sf::Color& GetColor();
 		const sf::Vector2f& GetPosition();
 		const sf::Text& GetText();
-
-		const sf::FloatRect& GetBounds();
+		const sf::FloatRect GetBounds();
 
 	private:
 		void ParamToString() {}
@@ -61,7 +69,6 @@ namespace Tools
 		}
 
 	private:
-
 		sf::Text TEXT;
 		sf::Font FONT;
 		std::string STRING;
