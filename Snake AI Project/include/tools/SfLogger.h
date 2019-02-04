@@ -22,19 +22,6 @@ namespace Tools
 		SfLogger();
 		~SfLogger();
 
-		/*template<typename P1, typename ... Param>
-		static void StaticSave(int p_size, const sf::Color p_color, const sf::Vector2f p_position,
-			const P1 &p1, const Param& ... param)
-		{
-			__DEFAULT_TEXT.SetSize(p_size);
-			__DEFAULT_TEXT.SetColor(p_color);
-			__DEFAULT_TEXT.SetPosition(p_position);
-			__DEFAULT_TEXT.SetText(p1, param...);
-			__DEFAULT_TEXT.SetFont(__FONT_MAP["SAO"]);
-
-			__TEXT_PACK.push_back(__DEFAULT_TEXT);
-		}*/
-
 		template<typename P1, typename ... Param>
 		static void Save(int p_size, const sf::Color p_color, const sf::Vector2f p_position,
 			const P1 &p1, const Param& ... param)

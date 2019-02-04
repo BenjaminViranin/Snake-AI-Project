@@ -9,6 +9,7 @@
 #include "tools/SfLogger.h"
 #include "Map_Manager.h"
 #include "entity/Snake.h"
+#include "UI_Manager.h"
 
 enum class EGameState
 {
@@ -23,21 +24,7 @@ enum class EGameState
 class Game_Manager
 {
 public:
-	static EGameState EGameState;
-
-	Tools::SfText GameOver;
-	Tools::SfText score;
-	Tools::SfText fps;
-	Tools::SfText fpsValue;
-	Tools::SfText pause;
-	Tools::SfText pauseValue;
-	Tools::SfText resetGame;
-	Tools::SfText quit;
-	Tools::SfText drawGrid;
-	Tools::SfText drawGridValue;
-	Tools::SfText snakeSpeed;
-	Tools::SfText snakeSpeedValue;
-	Tools::SfText showHighScores;
+	static EGameState gameState;
 
 private:
 	sf::RenderWindow m_window;
@@ -48,13 +35,13 @@ private:
 	/* Saves */
 	int m_saveLength;
 
-	Tools::SfLogger m_textTools;
 	Map_Manager m_map_manager;
 	Snake m_snake;
+	UI_Manager m_ui_manager = UI_Manager(m_snake, m_map_manager);
 
 public:
 	Game_Manager();
-	~Game_Manager() {};
+	~Game_Manager() = default;
 
 	int Run();
 	void Init();
@@ -63,7 +50,6 @@ public:
 	void Close();
 	void Reset();
 
-	void DrawHUD();
 	void ShowHighScores();
 
 	void SaveScore();

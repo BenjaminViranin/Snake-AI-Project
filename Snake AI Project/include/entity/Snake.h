@@ -5,8 +5,8 @@
 
 #include <SFML/System/Vector2.hpp>
 #include <vector>
-#include "../manager/map_manager.h"
-#include <mutex>
+
+#include "manager/map_manager.h"
 
 enum class EPrimitiveDirection
 {
