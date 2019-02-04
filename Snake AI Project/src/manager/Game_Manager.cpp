@@ -72,8 +72,9 @@ void Game_Manager::ShowHighScores()
 	sf::Color l_textColor = sf::Color(135, 206, 250);
 	sf::Vector2f l_textPos;
 
+	// TODO load save when show Score pressed
 	std::vector<std::pair<std::string, int>> l_saveData;
-	LoadScore(l_saveData);
+	LoadSave(l_saveData);
 
 	/*for (int i = 0; i < l_saveData.size(); ++i)
 	{
@@ -122,7 +123,7 @@ void Game_Manager::SaveScore()
 	else std::cout << "Unable to open file";
 }
 
-void Game_Manager::LoadScore(std::vector<std::pair<std::string, int>>& p_saveData)
+void Game_Manager::LoadSave(std::vector<std::pair<std::string, int>>& p_saveData)
 {
 	std::ifstream readFile;
 	std::string line;
@@ -184,9 +185,10 @@ void Game_Manager::InputEvent(sf::Event& event)
 		case sf::Keyboard::H:
 			if (gameState == EGameState::IsRunning)
 			{
-				gameState = EGameState::IsShowHighScore;
+				// todo LoadSave here
+				gameState = EGameState::IsShowingHighScore;
 			}
-			else if (gameState == EGameState::IsShowHighScore)
+			else if (gameState == EGameState::IsShowingHighScore)
 			{
 				gameState = EGameState::IsRunning;
 			}
@@ -215,15 +217,16 @@ void Game_Manager::Update()
 {
 	this->m_window.clear();
 
-	if (gameState == EGameState::IsShowHighScore)
+	/* TODO when show score press: game_manager tell to save_manager to load save,
+		and then ui_manager show save screen with a ref to save_manager */
+	if (gameState == EGameState::IsShowingHighScore)
 		ShowHighScores();
 	else
 	{
 		m_map_manager.DrawMap(&m_window);
 		m_snake.Draw(&m_window);
+		m_ui_manager.Draw(&m_window);
 	}
-
-	m_ui_manager.Draw(&m_window);
 
 	this->m_window.display();
 }

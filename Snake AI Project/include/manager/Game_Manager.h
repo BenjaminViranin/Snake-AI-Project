@@ -18,7 +18,7 @@ enum class EGameState
 	IsClose,
 	IsGameOver,
 	IsPause,
-	IsShowHighScore
+	IsShowingHighScore
 };
 
 class Game_Manager
@@ -50,10 +50,12 @@ public:
 	void Close();
 	void Reset();
 
+	// TODO implemente in Ui_Manager
 	void ShowHighScores();
 
+	// TODO implement in Save_Manager
 	void SaveScore();
-	void LoadScore(std::vector<std::pair<std::string, int>>& p_saveData);
+	void LoadSave(std::vector<std::pair<std::string, int>>& p_saveData);
 
 	void InputEvent(sf::Event& event);
 	void ExitGame(sf::Event& event);

@@ -32,29 +32,26 @@ namespace Tools
 			__DEFAULT_TEXT.SetText(p1, param...);
 			__DEFAULT_TEXT.SetFont(__FONT_MAP["SAO"]);
 
-			//__TEXT_PACK.push_back(__DEFAULT_TEXT);
+			__TEMPORARY_TEXT_PACK.push_back(__DEFAULT_TEXT);
 		}
 
-		//static void StaticSave(SfText& p_text);
-		static void Save(SfText& p_text);
+		static void			Save(SfText& p_text);
 
-		static void LoadFont(std::string p_name, std::string p_path);
-		static sf::Font& GetFont(std::string p_name);
+		static void			LoadFont(std::string p_name, std::string p_path);
+		static sf::Font&	GetFont(std::string p_name);
 
-		static SfText GetText(std::string p_text);
-		static SfText GetLastText();
+		static SfText		GetText(std::string p_text);
 
 		/* Draw and clear */
-		static void Draw(sf::RenderWindow* p_window);
+		static void			Draw(sf::RenderWindow* p_window);
 		/* Must be call before method Draw */
-		static void DrawTextsBounds(sf::RenderWindow* p_window);
+		static void			DrawTextsBounds(sf::RenderWindow* p_window);
 
 	private:
-		static void ResetTextPack();
-
-		static SfText __DEFAULT_TEXT;
-		static std::map<std::string, sf::Font> __FONT_MAP;
-		static std::vector<std::reference_wrapper<SfText>> __TEXT_PACK;
+		static SfText										__DEFAULT_TEXT;
+		static std::map<std::string, sf::Font>				__FONT_MAP;
+		static std::vector<SfText>							__TEMPORARY_TEXT_PACK;
+		static std::vector<std::reference_wrapper<SfText>>	__STATIC_TEXT_PACK;
 	};
 }
 

@@ -9,9 +9,10 @@ Tools::SfText::SfText()
 	TEXT.setPosition(sf::Vector2f());
 	TEXT.setString("");
 	TEXT_ENCRAGE = ETextEncrage::UpLeft;
+	IS_DRAWABLE = true;
 }
 
-Tools::SfText::SfText(int p_size, sf::Font p_font, sf::Color p_color, sf::Vector2f p_position, std::string p_text)
+Tools::SfText::SfText(int p_size, sf::Font p_font, sf::Color p_color, sf::Vector2f p_position, std::string p_text, ETextEncrage p_textEncrage)
 {
 	TEXT.setCharacterSize(p_size);
 	FONT = p_font;
@@ -20,6 +21,8 @@ Tools::SfText::SfText(int p_size, sf::Font p_font, sf::Color p_color, sf::Vector
 	TEXT.setStyle(sf::Text::Bold);
 	TEXT.setPosition(p_position);
 	TEXT.setString(p_text);
+	TEXT_ENCRAGE = p_textEncrage;
+	IS_DRAWABLE = true;
 }
 
 Tools::SfText::~SfText()
@@ -127,4 +130,9 @@ const sf::Text& Tools::SfText::GetText()
 const sf::FloatRect Tools::SfText::GetBounds()
 {
 	return TEXT.getGlobalBounds();
+}
+
+bool& Tools::SfText::IsDrawable()
+{
+	return IS_DRAWABLE;
 }

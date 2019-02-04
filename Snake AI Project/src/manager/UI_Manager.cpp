@@ -20,36 +20,29 @@ void UI_Manager::Init(int p_windowWidth, int p_windowHeight)
 {
 	m_windowWidth = p_windowWidth;
 	m_windowHeight = p_windowHeight;
-}
 
-void UI_Manager::Update() 
-{
 	const sf::Color textColor = sf::Color(135, 206, 250);
 	const float heightTextOffset = 4.0f;
 
 	// Draw Pause
-	if (Game_Manager::gameState == EGameState::IsPause)
-	{
-		pause.SetFont(Tools::SfLogger::GetFont("SAO"));
-		pause.SetSize(50);
-		pause.SetColor(textColor);
-		pause.SetOrigin(Tools::ETextEncrage::Middle);
-		pause.SetText("PAUSE");
-		pause.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, m_windowHeight * 0.5f));
-		Tools::SfLogger::Save(pause);
-	}
+	pauseScreen.SetFont(Tools::SfLogger::GetFont("SAO"));
+	pauseScreen.SetSize(50);
+	pauseScreen.SetColor(textColor);
+	pauseScreen.SetOrigin(Tools::ETextEncrage::Middle);
+	pauseScreen.SetText("PAUSE");
+	pauseScreen.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, m_windowHeight * 0.5f));
+	pauseScreen.IsDrawable() = false;
+	Tools::SfLogger::Save(pauseScreen);
 
 	// Draw Game Over
-	if (Game_Manager::gameState == EGameState::IsGameOver)
-	{
-		GameOver.SetFont(Tools::SfLogger::GetFont("SAO"));
-		GameOver.SetSize(50);
-		GameOver.SetColor(sf::Color::Red);
-		GameOver.SetOrigin(Tools::ETextEncrage::Middle);
-		GameOver.SetText("GAME OVER");
-		GameOver.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, m_windowHeight * 0.5f));
-		Tools::SfLogger::Save(GameOver);
-	}
+	GameOver.SetFont(Tools::SfLogger::GetFont("SAO"));
+	GameOver.SetSize(50);
+	GameOver.SetColor(sf::Color::Red);
+	GameOver.SetOrigin(Tools::ETextEncrage::Middle);
+	GameOver.SetText("GAME OVER");
+	GameOver.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, m_windowHeight * 0.5f));
+	GameOver.IsDrawable() = false;
+	Tools::SfLogger::Save(GameOver);
 
 	// Draw Score
 	score.SetFont(Tools::SfLogger::GetFont("SAO"));
@@ -144,7 +137,44 @@ void UI_Manager::Update()
 	Tools::SfLogger::Save(showHighScores);
 }
 
+void UI_Manager::Update() 
+{
+	const sf::Color textColor = sf::Color(135, 206, 250);
+	const float heightTextOffset = 4.0f;
+
+	// Draw Pause
+	if (Game_Manager::gameState == EGameState::IsPause)
+		pauseScreen.IsDrawable() = true;
+	else
+		pauseScreen.IsDrawable() = false;
+
+	// Draw Game Over
+	if (Game_Manager::gameState == EGameState::IsGameOver)
+		GameOver.IsDrawable() = true;
+	else
+		GameOver.IsDrawable() = false;
+
+	// Draw Score
+	score.SetText("SCORE: ", m_snake.GetScore());
+
+	// Draw FPS
+	fpsValue.SetText(Tools::Time::GetFPS());
+
+	// Draw Pause
+	pauseValue.SetColor(Game_Manager::gameState == EGameState::IsPause ? sf::Color::Green : sf::Color::Red);
+	pauseValue.SetText(Game_Manager::gameState == EGameState::IsPause ? "true" : "false");
+
+	// Draw Draw Grid
+	drawGridValue.SetColor(m_map_manager.IsDrawGrid() ? sf::Color::Green : sf::Color::Red);
+	drawGridValue.SetText(m_map_manager.IsDrawGrid() ? "true" : "false");
+
+	// Draw Snake Speed
+	snakeSpeedValue.SetColor(m_snake.GetSpeed() < 50 ? sf::Color::Red : m_snake.GetSpeed() > 85 ? sf::Color::Red : sf::Color::Green);
+	snakeSpeedValue.SetText(m_snake.GetSpeed());
+}
+
 void UI_Manager::Draw(sf::RenderWindow* p_window)
 {
 	Tools::SfLogger::Draw(p_window);
+	Tools::SfLogger::DrawTextsBounds(p_window);
 }

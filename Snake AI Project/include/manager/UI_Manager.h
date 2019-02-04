@@ -31,6 +31,7 @@ private:
 	Tools::SfText score;
 	Tools::SfText fps;
 	Tools::SfText fpsValue;
+	Tools::SfText pauseScreen;
 	Tools::SfText pause;
 	Tools::SfText pauseValue;
 	Tools::SfText resetGame;

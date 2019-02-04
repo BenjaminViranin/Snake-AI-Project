@@ -28,7 +28,7 @@ namespace Tools
 	{
 	public:
 		SfText();
-		SfText(int p_size, sf::Font p_font, sf::Color p_color, sf::Vector2f p_position, std::string p_text);
+		SfText(int p_size, sf::Font p_font, sf::Color p_color, sf::Vector2f p_position, std::string p_text, ETextEncrage p_textEncrage = ETextEncrage::UpLeft);
 		~SfText();
 
 		void SetSize(int p_size);
@@ -48,12 +48,13 @@ namespace Tools
 			TEXT.setString(STRING);
 		}
 
-		const int& GetSize();
-		const sf::Font& GetFont();
-		const sf::Color& GetColor();
-		const sf::Vector2f& GetPosition();
-		const sf::Text& GetText();
-		const sf::FloatRect GetBounds();
+		const int&				GetSize();
+		const sf::Font&			GetFont();
+		const sf::Color&		GetColor();
+		const sf::Vector2f&		GetPosition();
+		const sf::Text&			GetText();
+		const sf::FloatRect		GetBounds();
+		bool&					IsDrawable();
 
 	private:
 		void ParamToString() {}
@@ -69,11 +70,12 @@ namespace Tools
 		}
 
 	private:
-		sf::Text TEXT;
-		sf::Font FONT;
-		std::string STRING;
-		ETextEncrage TEXT_ENCRAGE;
+		sf::Text		 TEXT;
+		sf::Font		 FONT;
+		std::string		 STRING;
+		ETextEncrage	 TEXT_ENCRAGE;
+		bool			 IS_DRAWABLE;
 	};
 }
 
-#endif
+#endif // __SF_TEXT_H__
