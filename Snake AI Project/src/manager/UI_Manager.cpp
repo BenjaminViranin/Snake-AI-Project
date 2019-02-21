@@ -154,6 +154,8 @@ void UI_Manager::Init(int p_windowWidth, int p_windowHeight)
 
 		textPos.y += highScore.GetBounds().height + 2;
 	}
+
+
 }
 
 void UI_Manager::Update() 

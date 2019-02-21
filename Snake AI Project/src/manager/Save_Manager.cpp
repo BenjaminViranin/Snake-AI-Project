@@ -86,7 +86,7 @@ void Save_Manager::RewriteFile()
 {
 	std::ofstream writeFile;
 
-	writeFile.open("Save/HighScores.txt", std::fstream::app);
+	writeFile.open("Save/HighScores.txt", std::ofstream::out | std::ofstream::trunc);
 	if (writeFile.is_open())
 	{
 		for (auto element : m_playerData)
@@ -122,6 +122,9 @@ void Save_Manager::LoadSave()
 	{
 		while (getline(readFile, line))
 		{
+			if (line.find(':') == std::string::npos)
+				continue;
+
 			name = line.substr(0, line.find(':'));
 			score = line.substr(line.find(':') + 1);
 
@@ -131,8 +134,8 @@ void Save_Manager::LoadSave()
 				m_playerData.emplace_back(std::pair<std::string, int>(name, std::stoi(score)));
 		}
 
-		std::sort(m_AI_Data.begin(), m_AI_Data.end());
-		std::sort(m_playerData.begin(), m_playerData.end());
+		std::sort(m_AI_Data.rbegin(), m_AI_Data.rend());
+		std::sort(m_playerData.rbegin(), m_playerData.rend());
 
 		readFile.close();
 	}
