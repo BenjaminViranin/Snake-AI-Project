@@ -129,8 +129,9 @@ void Game_Manager::Draw()
 	{
 		m_map_manager.DrawMap(&m_window);
 		m_snake.Draw(&m_window);
-		m_ui_manager.Draw(&m_window);
 	}
+
+	m_ui_manager.Draw(&m_window);
 
 	this->m_window.display();
 }

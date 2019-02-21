@@ -136,13 +136,28 @@ void UI_Manager::Init(int p_windowWidth, int p_windowHeight)
 	showHighScores.SetText("[H] Show High Scores ");
 	showHighScores.SetPositionWithOtherText(snakeSpeed, Tools::ETextPosition::Down, heightTextOffset);
 	Tools::SfLogger::Save(showHighScores);
+
+	// Draw Player High Scores
+	Tools::SfText highScore;
+	highScore.SetFont(Tools::SfLogger::GetFont("SAO"));
+	highScore.SetSize(22);
+	highScore.SetColor(textColor);
+	highScore.SetText("Player : ...");
+	highScore.IsDrawable() = false;
+
+	sf::Vector2f textPos(m_windowWidth * 0.5f, m_windowHeight * 0.5f);
+	for (int i = 0; i < m_save_manager.GetSaveLenght(); ++i)
+	{
+		highScore.SetPosition(textPos);
+		playerScores.push_back(highScore);
+		Tools::SfLogger::Save(playerScores.back());
+
+		textPos.y += highScore.GetBounds().height + 2;
+	}
 }
 
 void UI_Manager::Update() 
 {
-	const sf::Color textColor = sf::Color(135, 206, 250);
-	const float heightTextOffset = 4.0f;
-
 	// Update Pause
 	if (Game_Manager::gameState == EGameState::IsPause)
 		pauseScreen.IsDrawable() = true;
@@ -177,15 +192,16 @@ void UI_Manager::Update()
 void UI_Manager::Draw(sf::RenderWindow* p_window)
 {
 	Tools::SfLogger::Draw(p_window);
-	Tools::SfLogger::DrawTextsBounds(p_window);
 }
 
 void UI_Manager::ShowScoreScreen()
 {
-	sf::Color textColor = sf::Color(135, 206, 250);
-	sf::Vector2f textPos;
-
 	const auto& PlayerData = m_save_manager.GetPlayerData();
 	const auto& AI_Data = m_save_manager.GetAIData();
 
+	for (int i = 0; i < PlayerData.size(); ++i)
+	{
+		playerScores[i].IsDrawable() = true;
+		playerScores[i].SetText(PlayerData[i].first, " : ", PlayerData[i].second);
+	}
 }

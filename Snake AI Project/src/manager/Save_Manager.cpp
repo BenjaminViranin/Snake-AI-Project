@@ -6,7 +6,7 @@
 
 Save_Manager::Save_Manager(Snake& p_snake) :
 m_snake(p_snake),
-m_saveLength(20)
+m_saveLength(10)
 {
 }
 
@@ -16,23 +16,51 @@ Save_Manager::~Save_Manager()
 
 void Save_Manager::SaveScore()
 {
-	const std::string name = m_snake.IsAIActive() ? "AI" : "Player";
-	const int score = m_snake.GetScore();
-
 	LoadSave();
 
-	if (m_AI_Data.size() + m_playerData.size() < m_saveLength)
+	if (m_snake.IsAIActive())
+		SaveAIScore();
+	else
+		SavePlayerScore();
+
+}
+
+void Save_Manager::SavePlayerScore()
+{
+	const std::string name = "Player";
+	const int score = m_snake.GetScore();
+
+	if (m_playerData.size() < m_saveLength)
 	{
 		AddScore(name, score);
 	}
 	else
 	{
-		auto& currentDataPack = m_snake.IsAIActive() ? m_AI_Data : m_playerData;
-
-		if (score > currentDataPack.back().second)
+		if (score > m_playerData.back().second)
 		{
-			currentDataPack.back().first = name;
-			currentDataPack.back().second = score;
+			m_playerData.back().first = name;
+			m_playerData.back().second = score;
+
+			RewriteFile();
+		}
+	}
+}
+
+void Save_Manager::SaveAIScore()
+{
+	const std::string name = "AI";
+	const int score = m_snake.GetScore();
+
+	if (m_AI_Data.size() < m_saveLength)
+	{
+		AddScore(name, score);
+	}
+	else
+	{
+		if (score > m_AI_Data.back().second)
+		{
+			m_AI_Data.back().first = name;
+			m_AI_Data.back().second = score;
 
 			RewriteFile();
 		}
@@ -46,7 +74,7 @@ void Save_Manager::AddScore(const std::string& p_name, const int& p_score)
 	writeFile.open("Save/HighScores.txt", std::fstream::app);
 	if (writeFile.is_open())
 	{
-		std::string data = "\n" + p_name + ":" + std::to_string(p_score);
+		std::string data = p_name + ":" + std::to_string(p_score) + "\n";
 		writeFile << data;
 
 		writeFile.close();
@@ -84,32 +112,23 @@ void Save_Manager::LoadSave()
 	std::string line;
 
 	std::string name;
-	int score;
+	std::string score;
+
+	m_AI_Data.clear();
+	m_playerData.clear();
 
 	readFile.open("Save/HighScores.txt");
 	if (readFile.is_open())
 	{
 		while (getline(readFile, line))
 		{
-			bool isName = true;
-
-			for (auto c : line)
-			{
-				if (c == ':')
-				{
-					isName = false;
-					continue;
-				}
-				if (isName)
-					name += c;
-				else
-					score = 0;
-			}
+			name = line.substr(0, line.find(':'));
+			score = line.substr(line.find(':') + 1);
 
 			if (name == "AI")
-				m_AI_Data.emplace_back(std::pair<std::string, int>(name, score));
+				m_AI_Data.emplace_back(std::pair<std::string, int>(name, std::stoi(score)));
 			else
-				m_playerData.emplace_back(std::pair<std::string, int>(name, score));
+				m_playerData.emplace_back(std::pair<std::string, int>(name, std::stoi(score)));
 		}
 
 		std::sort(m_AI_Data.begin(), m_AI_Data.end());
@@ -118,6 +137,11 @@ void Save_Manager::LoadSave()
 		readFile.close();
 	}
 	else std::cout << "Unable to open file";
+}
+
+const int& Save_Manager::GetSaveLenght()
+{
+	return m_saveLength;
 }
 
 const std::vector<std::pair<std::string, int>>& Save_Manager::GetPlayerData()

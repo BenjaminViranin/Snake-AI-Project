@@ -10,6 +10,8 @@
 #include "entity/Snake.h"
 #include "Save_Manager.h"
 
+#include <deque>
+
 class UI_Manager
 {
 public:
@@ -31,6 +33,7 @@ private:
 	Map_Manager& m_map_manager;
 	Save_Manager& m_save_manager;
 
+	/* Main Screen */
 	Tools::SfText GameOver;
 	Tools::SfText score;
 	Tools::SfText fps;
@@ -45,6 +48,10 @@ private:
 	Tools::SfText snakeSpeed;
 	Tools::SfText snakeSpeedValue;
 	Tools::SfText showHighScores;
+
+	/* High Scores Screen */
+	std::deque<Tools::SfText> playerScores;
+	std::deque<Tools::SfText> AIScores;
 };
 
 #endif // __UI_MANAGER_H__

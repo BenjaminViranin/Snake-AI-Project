@@ -1,21 +1,4 @@
--High Scores Save-
-Benji:22
-Benji:89
-Benji:11
-Benji:8
-Benji:48
-Benji:4
-Benji:2
-Benji:0
-Benji:0
-Benji:31
-Benji:0
-Benji:37
-Benji:0
-Benji:0
-Benji:0
-Benji:13
-Benji:19
-Benji:0
-Benji:0
-Benji:0
+Player:0
+Player:0
+Player:0
+Player:0

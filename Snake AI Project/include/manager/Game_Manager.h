@@ -6,7 +6,6 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "tools/SfLogger.h"
 #include "Map_Manager.h"
 #include "entity/Snake.h"
 #include "UI_Manager.h"
@@ -33,8 +32,8 @@ private:
 	int m_windowWidth;
 	int m_windowHeight;
 
-	Map_Manager m_map_manager;
 	Snake m_snake;
+	Map_Manager m_map_manager;
 	Save_Manager m_save_manager = Save_Manager(m_snake);
 	UI_Manager m_ui_manager = UI_Manager(m_snake, m_map_manager, m_save_manager);
 

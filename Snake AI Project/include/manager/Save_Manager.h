@@ -17,10 +17,13 @@ public:
 	void SaveScore();
 	void LoadSave();
 
+	const int& GetSaveLenght();
 	const std::vector<std::pair<std::string, int>>& GetPlayerData();
 	const std::vector<std::pair<std::string, int>>& GetAIData();
 
 private:
+	void SavePlayerScore();
+	void SaveAIScore();
 	void AddScore(const std::string& p_name, const int& p_score);
 	void RewriteFile();
 

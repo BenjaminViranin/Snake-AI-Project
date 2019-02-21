@@ -61,15 +61,15 @@ Tools::SfText Tools::SfLogger::GetText(std::string p_text)
 
 void Tools::SfLogger::Draw(sf::RenderWindow* p_window)
 {
-	for (uint16_t i = 0; i < __STATIC_TEXT_PACK.size(); i++)
+	for (auto text : __STATIC_TEXT_PACK)
 	{
-		if (__STATIC_TEXT_PACK[i].get().IsDrawable())
-			p_window->draw(__STATIC_TEXT_PACK[i].get().GetText());
+		if (text.get().IsDrawable())
+			p_window->draw(text.get().GetText());
 	}
-	for (uint16_t i = 0; i < __TEMPORARY_TEXT_PACK.size(); i++)
+	for (auto text : __TEMPORARY_TEXT_PACK)
 	{
-		if (__TEMPORARY_TEXT_PACK[i].IsDrawable())
-			p_window->draw(__TEMPORARY_TEXT_PACK[i].GetText());
+		if (text.IsDrawable())
+			p_window->draw(text.GetText());
 	}
 
 	if(!__TEMPORARY_TEXT_PACK.empty())
