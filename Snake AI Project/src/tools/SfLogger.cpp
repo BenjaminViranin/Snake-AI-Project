@@ -89,8 +89,8 @@ void Tools::SfLogger::DrawTextsBounds(sf::RenderWindow* p_window)
 		{
 			sf::FloatRect bounds = __STATIC_TEXT_PACK[i].get().GetBounds();
 			boundsShape.setSize(sf::Vector2f(bounds.width, bounds.height));
-			boundsShape.setPosition(sf::Vector2f(__STATIC_TEXT_PACK[i].get().GetPosition().x + bounds.width * 0.025f,
-												 __STATIC_TEXT_PACK[i].get().GetPosition().y + bounds.height * 0.225));
+			boundsShape.setPosition(sf::Vector2f(bounds.left, bounds.top));
+
 			p_window->draw(boundsShape);
 		}
 	}
@@ -100,8 +100,8 @@ void Tools::SfLogger::DrawTextsBounds(sf::RenderWindow* p_window)
 		{
 			sf::FloatRect bounds = __TEMPORARY_TEXT_PACK[i].GetBounds();
 			boundsShape.setSize(sf::Vector2f(bounds.width, bounds.height));
-			boundsShape.setPosition(sf::Vector2f(__TEMPORARY_TEXT_PACK[i].GetPosition().x + bounds.width * 0.025f,
-												 __TEMPORARY_TEXT_PACK[i].GetPosition().y + bounds.height * 0.225));
+			boundsShape.setPosition(sf::Vector2f(bounds.left, bounds.top));
+
 			p_window->draw(boundsShape);
 		}
 	}
