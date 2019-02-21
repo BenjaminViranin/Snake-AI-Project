@@ -182,10 +182,10 @@ void UI_Manager::Draw(sf::RenderWindow* p_window)
 
 void UI_Manager::ShowScoreScreen()
 {
-	sf::Color l_textColor = sf::Color(135, 206, 250);
-	sf::Vector2f l_textPos;
+	sf::Color textColor = sf::Color(135, 206, 250);
+	sf::Vector2f textPos;
 
-	// TODO load save when show Score pressed
-	std::vector<std::pair<std::string, int>> l_saveData;
-	//LoadSave(l_saveData);
+	const auto& PlayerData = m_save_manager.GetPlayerData();
+	const auto& AI_Data = m_save_manager.GetAIData();
+
 }

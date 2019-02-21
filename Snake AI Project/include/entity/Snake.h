@@ -94,6 +94,7 @@ public:
 	float&			GetSpeed();
 	int&			GetScore();
 	bool			IsAlive();
+	bool			IsAIActive();
 };
 
 #endif

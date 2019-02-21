@@ -16,31 +16,63 @@ Save_Manager::~Save_Manager()
 
 void Save_Manager::SaveScore()
 {
-	int l_linesNumber = 0;
+	const std::string name = m_snake.IsAIActive() ? "AI" : "Player";
+	const int score = m_snake.GetScore();
 
-	std::ifstream readFile;
-	std::ofstream writeFile;
-	std::string line;
+	LoadSave();
 
-	readFile.open("Save/HighScores.txt");
-	if (readFile.is_open())
+	if (m_AI_Data.size() + m_playerData.size() < m_saveLength)
 	{
-		while (getline(readFile, line))
-			++l_linesNumber;
-		readFile.close();
+		AddScore(name, score);
 	}
-	else std::cout << "Unable to open file";
+	else
+	{
+		auto& currentDataPack = m_snake.IsAIActive() ? m_AI_Data : m_playerData;
+
+		if (score > currentDataPack.back().second)
+		{
+			currentDataPack.back().first = name;
+			currentDataPack.back().second = score;
+
+			RewriteFile();
+		}
+	}
+}
+
+void Save_Manager::AddScore(const std::string& p_name, const int& p_score)
+{
+	std::ofstream writeFile;
 
 	writeFile.open("Save/HighScores.txt", std::fstream::app);
 	if (writeFile.is_open())
 	{
-		std::string name = "Benji";
-		std::string score = ":" + std::to_string(m_snake.GetScore());
-		if (l_linesNumber <= m_saveLength)
+		std::string data = "\n" + p_name + ":" + std::to_string(p_score);
+		writeFile << data;
+
+		writeFile.close();
+	}
+	else std::cout << "Unable to open file";
+}
+
+void Save_Manager::RewriteFile()
+{
+	std::ofstream writeFile;
+
+	writeFile.open("Save/HighScores.txt", std::fstream::app);
+	if (writeFile.is_open())
+	{
+		for (auto element : m_playerData)
 		{
-			std::string data = "\n" + name + score;
+			std::string data = "\n" + element.first + ":" + std::to_string(element.second);
 			writeFile << data;
 		}
+
+		for (auto element : m_AI_Data)
+		{
+			std::string data = "\n" + element.first + ":" + std::to_string(element.second);
+			writeFile << data;
+		}
+
 		writeFile.close();
 	}
 	else std::cout << "Unable to open file";
@@ -74,14 +106,26 @@ void Save_Manager::LoadSave()
 					score = 0;
 			}
 
-			m_saveData.emplace_back(std::pair<std::string, int>(name, score));
+			if (name == "AI")
+				m_AI_Data.emplace_back(std::pair<std::string, int>(name, score));
+			else
+				m_playerData.emplace_back(std::pair<std::string, int>(name, score));
 		}
+
+		std::sort(m_AI_Data.begin(), m_AI_Data.end());
+		std::sort(m_playerData.begin(), m_playerData.end());
+
 		readFile.close();
 	}
 	else std::cout << "Unable to open file";
 }
 
-std::vector<std::pair<std::string, int>>& Save_Manager::GetData()
+const std::vector<std::pair<std::string, int>>& Save_Manager::GetPlayerData()
 {
-	return m_saveData;
+	return m_playerData;
+}
+
+const std::vector<std::pair<std::string, int>>& Save_Manager::GetAIData()
+{
+	return m_AI_Data;
 }

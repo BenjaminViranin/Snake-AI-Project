@@ -427,3 +427,8 @@ bool Snake::IsAlive()
 {
 	return m_isAlive;
 }
+
+bool Snake::IsAIActive()
+{
+	return m_AI_Active;
+}

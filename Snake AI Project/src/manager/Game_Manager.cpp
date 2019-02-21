@@ -91,7 +91,7 @@ void Game_Manager::InputEvent(sf::Event& event)
 		case sf::Keyboard::H:
 			if (gameState == EGameState::IsRunning)
 			{
-				// todo LoadSave here
+				m_save_manager.LoadSave();
 				gameState = EGameState::IsShowingHighScore;
 			}
 			else if (gameState == EGameState::IsShowingHighScore)
