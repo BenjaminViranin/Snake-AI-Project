@@ -4,11 +4,12 @@
 #include <tools/Time.h>
 #include <manager/Game_Manager.h>
 
-UI_Manager::UI_Manager(Snake& p_snake, Map_Manager& p_map_manager) :
+UI_Manager::UI_Manager(Snake& p_snake, Map_Manager& p_map_manager, Save_Manager& p_save_manager) :
 m_windowWidth(0),
 m_windowHeight(0),
 m_snake(p_snake),
-m_map_manager(p_map_manager)
+m_map_manager(p_map_manager),
+m_save_manager(p_save_manager)
 {
 }
 
@@ -142,33 +143,33 @@ void UI_Manager::Update()
 	const sf::Color textColor = sf::Color(135, 206, 250);
 	const float heightTextOffset = 4.0f;
 
-	// Draw Pause
+	// Update Pause
 	if (Game_Manager::gameState == EGameState::IsPause)
 		pauseScreen.IsDrawable() = true;
 	else
 		pauseScreen.IsDrawable() = false;
 
-	// Draw Game Over
+	// Update Game Over
 	if (Game_Manager::gameState == EGameState::IsGameOver)
 		GameOver.IsDrawable() = true;
 	else
 		GameOver.IsDrawable() = false;
 
-	// Draw Score
+	// Update Score
 	score.SetText("SCORE: ", m_snake.GetScore());
 
-	// Draw FPS
+	// Update FPS
 	fpsValue.SetText(Tools::Time::GetFPS());
 
-	// Draw Pause
+	// Update Pause
 	pauseValue.SetColor(Game_Manager::gameState == EGameState::IsPause ? sf::Color::Green : sf::Color::Red);
 	pauseValue.SetText(Game_Manager::gameState == EGameState::IsPause ? "true" : "false");
 
-	// Draw Draw Grid
+	// Update Draw Grid
 	drawGridValue.SetColor(m_map_manager.IsDrawGrid() ? sf::Color::Green : sf::Color::Red);
 	drawGridValue.SetText(m_map_manager.IsDrawGrid() ? "true" : "false");
 
-	// Draw Snake Speed
+	// Update Snake Speed
 	snakeSpeedValue.SetColor(m_snake.GetSpeed() < 50 ? sf::Color::Red : m_snake.GetSpeed() > 85 ? sf::Color::Red : sf::Color::Green);
 	snakeSpeedValue.SetText(m_snake.GetSpeed());
 }
@@ -177,4 +178,14 @@ void UI_Manager::Draw(sf::RenderWindow* p_window)
 {
 	Tools::SfLogger::Draw(p_window);
 	Tools::SfLogger::DrawTextsBounds(p_window);
+}
+
+void UI_Manager::ShowScoreScreen()
+{
+	sf::Color l_textColor = sf::Color(135, 206, 250);
+	sf::Vector2f l_textPos;
+
+	// TODO load save when show Score pressed
+	std::vector<std::pair<std::string, int>> l_saveData;
+	//LoadSave(l_saveData);
 }

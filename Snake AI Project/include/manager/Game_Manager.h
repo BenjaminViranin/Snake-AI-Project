@@ -10,6 +10,7 @@
 #include "Map_Manager.h"
 #include "entity/Snake.h"
 #include "UI_Manager.h"
+#include "Save_Manager.h"
 
 enum class EGameState
 {
@@ -32,12 +33,10 @@ private:
 	int m_windowWidth;
 	int m_windowHeight;
 
-	/* Saves */
-	int m_saveLength;
-
 	Map_Manager m_map_manager;
 	Snake m_snake;
-	UI_Manager m_ui_manager = UI_Manager(m_snake, m_map_manager);
+	Save_Manager m_save_manager = Save_Manager(m_snake);
+	UI_Manager m_ui_manager = UI_Manager(m_snake, m_map_manager, m_save_manager);
 
 public:
 	Game_Manager();
@@ -45,17 +44,10 @@ public:
 
 	int Run();
 	void Init();
-	void Loop();
 	void Update();
+	void Draw();
 	void Close();
 	void Reset();
-
-	// TODO implemente in Ui_Manager
-	void ShowHighScores();
-
-	// TODO implement in Save_Manager
-	void SaveScore();
-	void LoadSave(std::vector<std::pair<std::string, int>>& p_saveData);
 
 	void InputEvent(sf::Event& event);
 	void ExitGame(sf::Event& event);

@@ -6,18 +6,21 @@
 #include "tools/SfText.h"
 #include "tools/SfLogger.h"
 
-#include <manager/Map_Manager.h>
-#include <entity/Snake.h>
+#include "manager/Map_Manager.h"
+#include "entity/Snake.h"
+#include "Save_Manager.h"
 
 class UI_Manager
 {
 public:
-	UI_Manager(Snake& p_snake, Map_Manager& p_map_manager);
+	UI_Manager(Snake& p_snake, Map_Manager& p_map_manager, Save_Manager& p_save_manager);
 	~UI_Manager();
 
 	void Init(int p_windowWidth, int p_windowHeight);
 	void Update();
 	void Draw(sf::RenderWindow* p_window);
+
+	void ShowScoreScreen();
 
 private:
 	Tools::SfLogger m_sfLoggerManager;
@@ -26,6 +29,7 @@ private:
 	int m_windowHeight;
 	Snake& m_snake;
 	Map_Manager& m_map_manager;
+	Save_Manager& m_save_manager;
 
 	Tools::SfText GameOver;
 	Tools::SfText score;

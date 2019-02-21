@@ -1,21 +1,18 @@
 
-#include <iostream>
-#include <fstream>
-
 #include "include/manager/Game_Manager.h"
 #include "tools/Time.h"
 
 EGameState Game_Manager::gameState = EGameState::IsNotSet;
 
 Game_Manager::Game_Manager() : m_isFullScreen(false), m_windowWidth(1200), m_windowHeight(675),
-							   m_snake(m_map_manager.GetMap()), m_saveLength(20)
+							   m_snake(m_map_manager.GetMap())
 {
 }
 
 int Game_Manager::Run()
 {
 	this->Init();
-	this->Loop();
+	this->Update();
 	this->Close();
 
 	return 0;
@@ -43,7 +40,7 @@ void Game_Manager::Init()
 	m_snake.Init();
 }
 
-void Game_Manager::Loop()
+void Game_Manager::Update()
 {
 	sf::Event event;
 
@@ -63,99 +60,8 @@ void Game_Manager::Loop()
 
 		m_ui_manager.Update();
 
-		this->Update();
+		this->Draw();
 	}
-}
-
-void Game_Manager::ShowHighScores()
-{
-	sf::Color l_textColor = sf::Color(135, 206, 250);
-	sf::Vector2f l_textPos;
-
-	// TODO load save when show Score pressed
-	std::vector<std::pair<std::string, int>> l_saveData;
-	LoadSave(l_saveData);
-
-	/*for (int i = 0; i < l_saveData.size(); ++i)
-	{
-		if (i == 0)
-			l_textPos = sf::Vector2f(m_windowWidth * 0.5f - (Tools::SfLogger::GetTextBounds("[H] EXIT", 22).width * 0.5f),
-									 m_windowHeight * 0.5f - (Tools::SfLogger::GetTextBounds("[H] EXIT", 22).height * 0.5f));
-		else
-			l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Down, 4);
-
-		Tools::SfLogger::Save(22, l_textColor, l_textPos, l_saveData[i].first, std::to_string(l_saveData[i].second));
-	}
-
-	l_textPos = Tools::SfLogger::GetPositionByOtherText(Tools::SfLogger::GetLastText().getString(), Tools::ETextPosition::Down, 8);
-	Tools::SfLogger::Save(22, l_textColor, l_textPos, "[H] EXIT");*/
-}
-
-void Game_Manager::SaveScore()
-{
-	int l_linesNumber = 0;
-
-	std::ifstream readFile;
-	std::ofstream writeFile;
-	std::string line;
-
-	readFile.open("Save/HighScores.txt");
-	if (readFile.is_open())
-	{
-		while (getline(readFile, line))
-			++l_linesNumber;
-		readFile.close();
-	}
-	else std::cout << "Unable to open file";
-
-	writeFile.open("Save/HighScores.txt", std::fstream::app);
-	if (writeFile.is_open())
-	{
-		std::string name = "Benji";
-		std::string score = ":" + std::to_string(m_snake.GetScore());
-		if (l_linesNumber <= m_saveLength)
-		{
-			std::string data = "\n" + name + score;
-			writeFile << data;
-		}
-		writeFile.close();
-	}
-	else std::cout << "Unable to open file";
-}
-
-void Game_Manager::LoadSave(std::vector<std::pair<std::string, int>>& p_saveData)
-{
-	std::ifstream readFile;
-	std::string line;
-
-	std::string name;
-	int score;
-
-	readFile.open("Save/HighScores.txt");
-	if (readFile.is_open())
-	{
-		while (getline(readFile, line))
-		{
-			bool isName = true;
-			
-			for (auto c : line)
-			{
-				if (c == ':')
-				{
-					isName = false;
-					continue;
-				}
-				if (isName)
-					name += c;
-				else
-					score = 0;
-			}
-
-			p_saveData.emplace_back(std::pair<std::string, int>(name, score));
-		}
-		readFile.close();
-	}
-	else std::cout << "Unable to open file";
 }
 
 void Game_Manager::InputEvent(sf::Event& event)
@@ -213,14 +119,12 @@ void Game_Manager::ExitGame(sf::Event& event)
 	}
 }
 
-void Game_Manager::Update()
+void Game_Manager::Draw()
 {
 	this->m_window.clear();
 
-	/* TODO when show score press: game_manager tell to save_manager to load save,
-		and then ui_manager show save screen with a ref to save_manager */
 	if (gameState == EGameState::IsShowingHighScore)
-		ShowHighScores();
+		m_ui_manager.ShowScoreScreen();
 	else
 	{
 		m_map_manager.DrawMap(&m_window);
@@ -237,7 +141,7 @@ void Game_Manager::Close()
 
 void Game_Manager::Reset()
 {
-	SaveScore();
+	m_save_manager.SaveScore();
 	m_map_manager.ResetMap();
 	m_snake.Reset();
 	gameState = EGameState::IsRunning;
