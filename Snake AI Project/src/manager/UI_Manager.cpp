@@ -140,22 +140,33 @@ void UI_Manager::Init(int p_windowWidth, int p_windowHeight)
 	// Draw Player High Scores
 	Tools::SfText highScore;
 	highScore.SetFont(Tools::SfLogger::GetFont("SAO"));
-	highScore.SetSize(22);
+	highScore.SetSize(28);
 	highScore.SetColor(textColor);
-	highScore.SetText("Player : ...");
+	highScore.SetOrigin(Tools::ETextEncrage::Middle);
+	highScore.SetText("Player  :  ...");
 	highScore.IsDrawable() = false;
 
-	sf::Vector2f textPos(m_windowWidth * 0.5f, m_windowHeight * 0.5f);
+	sf::Vector2f textPos(m_windowWidth * 0.25f, m_windowHeight * 0.25f);
 	for (int i = 0; i < m_save_manager.GetSaveLenght(); ++i)
 	{
 		highScore.SetPosition(textPos);
 		playerScores.push_back(highScore);
 		Tools::SfLogger::Save(playerScores.back());
 
-		textPos.y += highScore.GetBounds().height + 2;
+		textPos.y += 30;
 	}
 
+	// Draw Player High Scores
+	textPos = sf::Vector2f(m_windowWidth * 0.75f, m_windowHeight * 0.25f);
+	highScore.SetText("AI  :  ...");
+	for (int i = 0; i < m_save_manager.GetSaveLenght(); ++i)
+	{
+		highScore.SetPosition(textPos);
+		AIScores.push_back(highScore);
+		Tools::SfLogger::Save(AIScores.back());
 
+		textPos.y += 30;
+	}
 }
 
 void UI_Manager::Update() 
@@ -201,9 +212,14 @@ void UI_Manager::ShowScoreScreen()
 	const auto& PlayerData = m_save_manager.GetPlayerData();
 	const auto& AI_Data = m_save_manager.GetAIData();
 
-	for (int i = 0; i < PlayerData.size(); ++i)
+	for (int i = 0; i < m_save_manager.GetSaveLenght(); ++i)
 	{
 		playerScores[i].IsDrawable() = true;
-		playerScores[i].SetText(PlayerData[i].first, " : ", PlayerData[i].second);
+		if (i < PlayerData.size())
+			playerScores[i].SetText(PlayerData[i].first, " : ", PlayerData[i].second);
+
+		AIScores[i].IsDrawable() = true;
+		if (i < AI_Data.size())
+			AIScores[i].SetText(AI_Data[i].first, " : ", AI_Data[i].second);
 	}
 }
