@@ -24,7 +24,8 @@ enum class EGameState
 class Game_Manager
 {
 public:
-	static EGameState gameState;
+	static EGameState GameState;
+	static std::string PlayerName;
 
 private:
 	sf::RenderWindow m_window;

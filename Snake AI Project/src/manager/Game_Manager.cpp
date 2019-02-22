@@ -2,10 +2,14 @@
 #include "include/manager/Game_Manager.h"
 #include "tools/Time.h"
 
-EGameState Game_Manager::gameState = EGameState::IsNotSet;
+EGameState Game_Manager::GameState = EGameState::IsNotSet;
+std::string Game_Manager::PlayerName = "Unknown";
 
-Game_Manager::Game_Manager() : m_isFullScreen(false), m_windowWidth(1200), m_windowHeight(675),
-							   m_snake(m_map_manager.GetMap())
+Game_Manager::Game_Manager() : 
+m_isFullScreen(false), 
+m_windowWidth(1200),
+m_windowHeight(675),
+m_snake(m_map_manager.GetMap())
 {
 }
 
@@ -33,7 +37,7 @@ void Game_Manager::Init()
 	m_window.setMouseCursorVisible(true);
 
 	this->m_window.display();
-	gameState = EGameState::IsRunning;
+	GameState = EGameState::IsRunning;
 
 	m_ui_manager.Init(m_windowWidth, m_windowHeight);
 	m_map_manager.GenerateMap(m_windowWidth, m_windowHeight);
@@ -44,13 +48,13 @@ void Game_Manager::Update()
 {
 	sf::Event event;
 
-	while (gameState != EGameState::IsClose)
+	while (GameState != EGameState::IsClose)
 	{
 		m_window.pollEvent(event);
 
 		InputEvent(event);
 
-		if (gameState == EGameState::IsRunning)
+		if (GameState == EGameState::IsRunning)
 		{
 			m_snake.Update(event);
 			m_map_manager.Update();
@@ -73,13 +77,13 @@ void Game_Manager::InputEvent(sf::Event& event)
 		switch (event.key.code)
 		{
 		case sf::Keyboard::P:
-			if (gameState == EGameState::IsRunning)
+			if (GameState == EGameState::IsRunning)
 			{
-				gameState = EGameState::IsPause;
+				GameState = EGameState::IsPause;
 			}
-			else if (gameState == EGameState::IsPause)
+			else if (GameState == EGameState::IsPause)
 			{
-				gameState = EGameState::IsRunning;
+				GameState = EGameState::IsRunning;
 			}
 			break;
 		case sf::Keyboard::R:
@@ -89,14 +93,16 @@ void Game_Manager::InputEvent(sf::Event& event)
 			Reset();
 			break;
 		case sf::Keyboard::H:
-			if (gameState == EGameState::IsRunning)
+			if (GameState == EGameState::IsRunning)
 			{
 				m_save_manager.LoadSave();
-				gameState = EGameState::IsShowingHighScore;
+				m_ui_manager.ShowScoreScreen();
+				GameState = EGameState::IsShowingHighScore;
 			}
-			else if (gameState == EGameState::IsShowingHighScore)
+			else if (GameState == EGameState::IsShowingHighScore)
 			{
-				gameState = EGameState::IsRunning;
+				m_ui_manager.ShowMainScreen();
+				GameState = EGameState::IsRunning;
 			}
 			break;
 		}
@@ -123,9 +129,7 @@ void Game_Manager::Draw()
 {
 	this->m_window.clear();
 
-	if (gameState == EGameState::IsShowingHighScore)
-		m_ui_manager.ShowScoreScreen();
-	else
+	if (GameState != EGameState::IsShowingHighScore)
 	{
 		m_map_manager.DrawMap(&m_window);
 		m_snake.Draw(&m_window);
@@ -145,5 +149,5 @@ void Game_Manager::Reset()
 	m_save_manager.SaveScore();
 	m_map_manager.ResetMap();
 	m_snake.Reset();
-	gameState = EGameState::IsRunning;
+	GameState = EGameState::IsRunning;
 }

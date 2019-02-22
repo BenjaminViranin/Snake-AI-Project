@@ -22,6 +22,7 @@ public:
 	void Update();
 	void Draw(sf::RenderWindow* p_window);
 
+	void ShowMainScreen();
 	void ShowScoreScreen();
 
 private:
@@ -50,8 +51,11 @@ private:
 	Tools::SfText showHighScores;
 
 	/* High Scores Screen */
-	std::deque<Tools::SfText> playerScores;
+	Tools::SfText highScoresTitle;
+	Tools::SfText highScoresExit;
+	std::deque<std::pair<Tools::SfText, Tools::SfText>> playerScores;
 	std::deque<Tools::SfText> AIScores;
+
 };
 
 #endif // __UI_MANAGER_H__

@@ -1,5 +1,6 @@
 
 #include "manager/Save_Manager.h"
+#include "manager/Game_Manager.h"
 
 #include <iostream>
 #include <fstream>
@@ -27,7 +28,7 @@ void Save_Manager::SaveScore()
 
 void Save_Manager::SavePlayerScore()
 {
-	const std::string name = "Player";
+	const std::string name = Game_Manager::PlayerName;
 	const int score = m_snake.GetScore();
 
 	if (m_playerData.size() < m_saveLength)
@@ -135,7 +136,11 @@ void Save_Manager::LoadSave()
 		}
 
 		std::sort(m_AI_Data.rbegin(), m_AI_Data.rend());
-		std::sort(m_playerData.rbegin(), m_playerData.rend());
+
+		std::sort(m_playerData.rbegin(), m_playerData.rend(), [=](std::pair<std::string, int>& a, std::pair<std::string, int>& b)
+		{
+			return a.second < b.second;
+		});
 
 		readFile.close();
 	}

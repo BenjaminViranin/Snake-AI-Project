@@ -78,8 +78,8 @@ void UI_Manager::Init(int p_windowWidth, int p_windowHeight)
 
 	pauseValue.SetFont(Tools::SfLogger::GetFont("SAO"));
 	pauseValue.SetSize(22);
-	pauseValue.SetColor(Game_Manager::gameState == EGameState::IsPause ? sf::Color::Green : sf::Color::Red);
-	pauseValue.SetText(Game_Manager::gameState == EGameState::IsPause ? "true" : "false");
+	pauseValue.SetColor(Game_Manager::GameState == EGameState::IsPause ? sf::Color::Green : sf::Color::Red);
+	pauseValue.SetText(Game_Manager::GameState == EGameState::IsPause ? "true" : "false");
 	pauseValue.SetPositionWithOtherText(pause, Tools::ETextPosition::Right, 2);
 	Tools::SfLogger::Save(pauseValue);
 
@@ -137,48 +137,85 @@ void UI_Manager::Init(int p_windowWidth, int p_windowHeight)
 	showHighScores.SetPositionWithOtherText(snakeSpeed, Tools::ETextPosition::Down, heightTextOffset);
 	Tools::SfLogger::Save(showHighScores);
 
-	// Draw Player High Scores
-	Tools::SfText highScore;
-	highScore.SetFont(Tools::SfLogger::GetFont("SAO"));
-	highScore.SetSize(28);
-	highScore.SetColor(textColor);
-	highScore.SetOrigin(Tools::ETextEncrage::Middle);
-	highScore.SetText("Player  :  ...");
-	highScore.IsDrawable() = false;
+	// Draw High Scores Title
+	highScoresTitle.SetFont(Tools::SfLogger::GetFont("SAO"));
+	highScoresTitle.SetSize(34);
+	highScoresTitle.SetColor(textColor);
+	highScoresTitle.SetText("HIGH SCORES");
+	highScoresTitle.SetOrigin(Tools::ETextEncrage::Middle);
+	highScoresTitle.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, 60));
+	highScoresTitle.IsDrawable() = false;
+	Tools::SfLogger::Save(highScoresTitle);
 
-	sf::Vector2f textPos(m_windowWidth * 0.25f, m_windowHeight * 0.25f);
+	// Draw Player High Scores
+	Tools::SfText playerName;
+	playerName.SetFont(Tools::SfLogger::GetFont("SAO"));
+	playerName.SetSize(28);
+	playerName.SetColor(textColor);
+	playerName.SetText(Game_Manager::PlayerName);
+	playerName.IsDrawable() = false;
+	sf::Vector2f namePos(m_windowWidth * 0.25f - 102, m_windowHeight * 0.25f);
+
+	Tools::SfText playerScore;
+	playerScore.SetFont(Tools::SfLogger::GetFont("SAO"));
+	playerScore.SetSize(28);
+	playerScore.SetColor(textColor);
+	playerScore.SetText(":     ...");
+	playerScore.IsDrawable() = false;
+	sf::Vector2f scorePos(m_windowWidth * 0.25f, m_windowHeight * 0.25f);
+
 	for (int i = 0; i < m_save_manager.GetSaveLenght(); ++i)
 	{
-		highScore.SetPosition(textPos);
-		playerScores.push_back(highScore);
-		Tools::SfLogger::Save(playerScores.back());
+		playerName.SetPosition(namePos);
+		playerScore.SetPosition(scorePos);
+		playerScores.emplace_back(std::pair<Tools::SfText, Tools::SfText>(playerName, playerScore));
+		Tools::SfLogger::Save(playerScores.back().first);
+		Tools::SfLogger::Save(playerScores.back().second);
 
-		textPos.y += 30;
+		namePos.y += 30;
+		scorePos.y += 30;
 	}
 
-	// Draw Player High Scores
-	textPos = sf::Vector2f(m_windowWidth * 0.75f, m_windowHeight * 0.25f);
-	highScore.SetText("AI  :  ...");
+	// Draw AI High Scores
+	Tools::SfText AIScore;
+	AIScore.SetFont(Tools::SfLogger::GetFont("SAO"));
+	AIScore.SetSize(28);
+	AIScore.SetColor(textColor);
+	AIScore.SetOrigin(Tools::ETextEncrage::Middle);
+	AIScore.SetText("    AI   :   ...   ");
+	AIScore.IsDrawable() = false;
+
+	sf::Vector2f AIScorePos(m_windowWidth * 0.75f, m_windowHeight * 0.25f);
 	for (int i = 0; i < m_save_manager.GetSaveLenght(); ++i)
 	{
-		highScore.SetPosition(textPos);
-		AIScores.push_back(highScore);
+		AIScore.SetPosition(AIScorePos);
+		AIScores.push_back(AIScore);
 		Tools::SfLogger::Save(AIScores.back());
 
-		textPos.y += 30;
+		AIScorePos.y += 30;
 	}
+
+	// Draw High Scores Exit
+	highScoresExit.SetFont(Tools::SfLogger::GetFont("SAO"));
+	highScoresExit.SetSize(26);
+	highScoresExit.SetColor(textColor);
+	highScoresExit.SetText("[H] Exit");
+	highScoresExit.SetOrigin(Tools::ETextEncrage::Middle);
+	highScoresExit.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, AIScores.back().GetPosition().y + 70));
+	highScoresExit.IsDrawable() = false;
+	Tools::SfLogger::Save(highScoresExit);
 }
 
 void UI_Manager::Update() 
 {
 	// Update Pause
-	if (Game_Manager::gameState == EGameState::IsPause)
+	if (Game_Manager::GameState == EGameState::IsPause)
 		pauseScreen.IsDrawable() = true;
 	else
 		pauseScreen.IsDrawable() = false;
 
 	// Update Game Over
-	if (Game_Manager::gameState == EGameState::IsGameOver)
+	if (Game_Manager::GameState == EGameState::IsGameOver)
 		GameOver.IsDrawable() = true;
 	else
 		GameOver.IsDrawable() = false;
@@ -190,8 +227,8 @@ void UI_Manager::Update()
 	fpsValue.SetText(Tools::Time::GetFPS());
 
 	// Update Pause
-	pauseValue.SetColor(Game_Manager::gameState == EGameState::IsPause ? sf::Color::Green : sf::Color::Red);
-	pauseValue.SetText(Game_Manager::gameState == EGameState::IsPause ? "true" : "false");
+	pauseValue.SetColor(Game_Manager::GameState == EGameState::IsPause ? sf::Color::Green : sf::Color::Red);
+	pauseValue.SetText(Game_Manager::GameState == EGameState::IsPause ? "true" : "false");
 
 	// Update Draw Grid
 	drawGridValue.SetColor(m_map_manager.IsDrawGrid() ? sf::Color::Green : sf::Color::Red);
@@ -207,19 +244,73 @@ void UI_Manager::Draw(sf::RenderWindow* p_window)
 	Tools::SfLogger::Draw(p_window);
 }
 
+void UI_Manager::ShowMainScreen()
+{
+	highScoresTitle.IsDrawable() = false;
+	highScoresExit.IsDrawable() = false;
+	for (auto& text : playerScores)
+		text.first.IsDrawable() = text.second.IsDrawable() = false;
+	for (auto& text : AIScores)
+		text.IsDrawable() = false;
+
+	GameOver.IsDrawable() = true;
+	score.IsDrawable() = true;
+	fps.IsDrawable() = true;
+	fpsValue.IsDrawable() = true;
+	pauseScreen.IsDrawable() = true;
+	pause.IsDrawable() = true;
+	pauseValue.IsDrawable() = true;
+	resetGame.IsDrawable() = true;
+	quit.IsDrawable() = true;
+	drawGrid.IsDrawable() = true;
+	drawGridValue.IsDrawable() = true;
+	snakeSpeed.IsDrawable() = true;
+	snakeSpeedValue.IsDrawable() = true;
+	showHighScores.IsDrawable() = true;
+}
+
 void UI_Manager::ShowScoreScreen()
 {
+	 GameOver.IsDrawable() = false;
+	 score.IsDrawable() = false;
+	 fps.IsDrawable() = false;
+	 fpsValue.IsDrawable() = false;
+	 pauseScreen.IsDrawable() = false;
+	 pause.IsDrawable() = false;
+	 pauseValue.IsDrawable() = false;
+	 resetGame.IsDrawable() = false;
+	 quit.IsDrawable() = false;
+	 drawGrid.IsDrawable() = false;
+	 drawGridValue.IsDrawable() = false;
+	 snakeSpeed.IsDrawable() = false;
+	 snakeSpeedValue.IsDrawable() = false;
+	 showHighScores.IsDrawable() = false;
+
 	const auto& PlayerData = m_save_manager.GetPlayerData();
 	const auto& AI_Data = m_save_manager.GetAIData();
 
+	highScoresTitle.IsDrawable() = true;
+	highScoresExit.IsDrawable() = true;
+
 	for (int i = 0; i < m_save_manager.GetSaveLenght(); ++i)
 	{
-		playerScores[i].IsDrawable() = true;
+		playerScores[i].first.IsDrawable() = playerScores[i].second.IsDrawable() = true;
 		if (i < PlayerData.size())
-			playerScores[i].SetText(PlayerData[i].first, " : ", PlayerData[i].second);
+		{
+			playerScores[i].first.SetText(PlayerData[i].first);
+			playerScores[i].second.SetText(":   ", PlayerData[i].second);
+		}
+		else
+		{
+			playerScores[i].first.SetText("Unknown   ");
+			playerScores[i].second.SetText(":   ...   ");
+		}
 
 		AIScores[i].IsDrawable() = true;
 		if (i < AI_Data.size())
 			AIScores[i].SetText(AI_Data[i].first, " : ", AI_Data[i].second);
+		else
+			AIScores[i].SetText("   AI   :   ...   ");
 	}
+
 }
