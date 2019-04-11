@@ -22,4 +22,4 @@ Snake AI Project is a 2D game. The goals for this project are :
 
 ## Build Instructions
 
-The build isn't included in this repository. To build this project use Visual Studio 2017 and hit play. A "Build" folder will be generated at the root of the repository.
+The build is in the folder "Build". You can also build this project by using Visual Studio 2017 and hit play. A "Build" folder will be generated at the root of the repository.
