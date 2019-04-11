@@ -200,7 +200,6 @@ xcopy "$(ProjectDir)ressource" "$(SolutionDir)Build\ressource\" /e /y /i /r
     <ClInclude Include="include\manager\Map_Manager.h" />
     <ClInclude Include="include\manager\Save_Manager.h" />
     <ClInclude Include="include\manager\UI_Manager.h" />
-    <ClInclude Include="include\tools\Animation_Manager.h" />
     <ClInclude Include="include\tools\Random.h" />
     <ClInclude Include="include\tools\SfLogger.h" />
     <ClInclude Include="include\tools\SfText.h" />

@@ -12,7 +12,6 @@
 # Build Folders
 Bin/
 Bin-Int/
-Build/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
