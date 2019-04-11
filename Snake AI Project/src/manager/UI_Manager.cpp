@@ -154,7 +154,7 @@ void UI_Manager::Init(int p_windowWidth, int p_windowHeight)
 	playerName.SetColor(textColor);
 	playerName.SetText(Game_Manager::PlayerName);
 	playerName.IsDrawable() = false;
-	sf::Vector2f namePos(m_windowWidth * 0.25f - 102, m_windowHeight * 0.25f);
+	sf::Vector2f namePos(m_windowWidth * 0.25f - 92, m_windowHeight * 0.25f);
 
 	Tools::SfText playerScore;
 	playerScore.SetFont(Tools::SfLogger::GetFont("SAO"));
@@ -162,7 +162,7 @@ void UI_Manager::Init(int p_windowWidth, int p_windowHeight)
 	playerScore.SetColor(textColor);
 	playerScore.SetText(":     ...");
 	playerScore.IsDrawable() = false;
-	sf::Vector2f scorePos(m_windowWidth * 0.25f, m_windowHeight * 0.25f);
+	sf::Vector2f scorePos(m_windowWidth * 0.25f + 10, m_windowHeight * 0.25f);
 
 	for (int i = 0; i < m_save_manager.GetSaveLenght(); ++i)
 	{
@@ -201,7 +201,7 @@ void UI_Manager::Init(int p_windowWidth, int p_windowHeight)
 	highScoresExit.SetColor(textColor);
 	highScoresExit.SetText("[H] Exit");
 	highScoresExit.SetOrigin(Tools::ETextEncrage::Middle);
-	highScoresExit.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, AIScores.back().GetPosition().y + 70));
+	highScoresExit.SetPosition(sf::Vector2f(m_windowWidth * 0.5f, AIScores.back().GetPosition().y + 100));
 	highScoresExit.IsDrawable() = false;
 	Tools::SfLogger::Save(highScoresExit);
 }
@@ -308,7 +308,7 @@ void UI_Manager::ShowScoreScreen()
 
 		AIScores[i].IsDrawable() = true;
 		if (i < AI_Data.size())
-			AIScores[i].SetText(AI_Data[i].first, " : ", AI_Data[i].second);
+			AIScores[i].SetText("   AI   :   ", AI_Data[i].second);
 		else
 			AIScores[i].SetText("   AI   :   ...   ");
 	}
