@@ -6,11 +6,11 @@ Snake AI Project is a 2D game. The goals for this project are :
 
 - Make a classic snake game
 
-- Make a simple AI using path finding
-
-- Make a deep learning AI
-
 - Make a tool to simplify 2d text display with memory optimization
+
+- Make a simple AI using path finding (work in progress)
+
+- Make a deep learning AI (work in progress)
 
 ## Libraries used
 
